@@ -1,0 +1,20 @@
+{
+  "name": "apite",
+  "version": "1.0.0",
+  "description": "一个用于前后端协作的api接口文档生成和联调工具",
+  "main": "index.js",
+  "bin": {
+    "apite": "cli.js"
+  },
+  "scripts": {
+    "dev": "cd ./test && apite --port=9000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangxing218/apite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://github.com/wangxing218/apite#readme"
+}
