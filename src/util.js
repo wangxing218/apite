@@ -1,5 +1,7 @@
 const path = require('path')
+const { exec } = require('child_process')
 const { config } = require('./config')
+const { resolve } = require('path')
 
 // 项目根目录
 exports.cwd = function (...dir) {

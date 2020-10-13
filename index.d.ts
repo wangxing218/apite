@@ -14,6 +14,8 @@ interface ExtOptions {
 
 declare module 'apite' {
   const api: Api;
-  function delay(from:number, to?: number): Promise<void>
-  function webpackExt(options: ExtOptions) : void
+  function delay(from: number, to?: number): Promise<void>
+  function mock(mockObj: any): any
+  function webpackExt(options: ExtOptions): void
+  function viteExt(options: ExtOptions): void
 }

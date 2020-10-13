@@ -13,6 +13,7 @@ class context {
     this.type = ''
     this.body = null
     this.path = ''
+    this.url = ''
     this.file = null
   }
 
@@ -36,16 +37,12 @@ class context {
     this.status = status
     this.body = body
   }
-  mock(body) {
-    this.body = Mock.mock(body)
-    return this.body
-  }
   captcha(config = {}) {
     const opt = {
       color: '#0080ff',
       background: '#f2f6fc',
-      height: 40,
-      width: 126,
+      // height: 40,
+      // width: 126,
       ...config
     }
     const captcha = svgCaptcha.create(opt)

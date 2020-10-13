@@ -15,7 +15,6 @@ async function inject(req, res) {
   await request.parseQuery(ctx)
   await request.parsePost(ctx)
   await router.handleRoute(ctx)
-  await router.handleRoute(ctx)
   await static.handleStatic(ctx)
   await response.handleBody(ctx)
 }

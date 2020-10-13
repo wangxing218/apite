@@ -2,19 +2,26 @@ const path = require('path')
 const fs = require('fs')
 const util = require('./util')
 const { config } = require('./config')
+const proxy = require('./proxy')
 
 exports.routes = []
 
 exports.FILE = null
 
 // 添加路由信息
-exports.addRoute = function({ url, handle, method }) {
+exports.addRoute = function ({ url, handle, method, options }) {
   if (handle === null || handle === undefined) return
   exports.unique(url, method)
+  if(options === true || options === 1){
+    options = {
+      proxy: true
+    }
+  }
   exports.routes.push({
     url,
     handle,
     method,
+    options,
     file: exports.FILE ? exports.FILE : undefined,
   })
 }
@@ -43,29 +50,52 @@ exports.delByFile = function (file) {
 }
 
 // 不限请求
-exports.all = function all(url, handle) {
+exports.all = function all(url, handle, options) {
   exports.addRoute({
     url,
     handle,
-    method: ''
+    method: '',
+    options
   })
 }
 
 // get请求
-exports.get = function (url, handle) {
+exports.get = function (url, handle, options) {
   exports.addRoute({
     url,
     handle,
-    method: 'GET'
+    method: 'GET',
+    options
   })
 }
 
 // post请求
-exports.post = function (url, handle) {
+exports.post = function (url, handle, options) {
   exports.addRoute({
     url,
     handle,
-    method: 'POST'
+    method: 'POST',
+    options
+  })
+}
+
+// put请求
+exports.put = function (url, handle, options) {
+  exports.addRoute({
+    url,
+    handle,
+    method: 'PUT',
+    options
+  })
+}
+
+// put请求
+exports.del = function (url, handle, options) {
+  exports.addRoute({
+    url,
+    handle,
+    method: 'DELETE',
+    options
   })
 }
 
@@ -77,16 +107,38 @@ exports.match = function (pathname) {
       matchRoute = item
       return false
     }
+    if (item.url.endsWith('*')) {
+      const mUrl = item.url.replace(/\*+$/, '')
+      if (pathname.startsWith(mUrl)) {
+        matchRoute = item
+        return false
+      }
+    }
     return true
   })
   return matchRoute
 }
 
 // 路由处理
- exports.handleRoute = async function (ctx) {
+exports.handleRoute = async function (ctx) {
   const matchRoute = exports.match(ctx.path)
   if (!matchRoute || matchRoute.handle === undefined || matchRoute.handle === null) {
     ctx.error()
+    return
+  }
+  if (matchRoute.options && matchRoute.options.proxy) { //代理
+    const proxyTarget = matchRoute.options.proxy === true ? config.proxy : matchRoute.options.proxy
+    if (!proxyTarget) {
+      ctx.err(500, 'Please config your proxy url!')
+    }
+    try {
+      const resp = await proxy(ctx, proxyTarget)
+      ctx.header = resp.header
+      ctx.status = resp.status
+      ctx.body = resp.body
+    } catch (err) {
+      ctx.error(501, 'Proxy failed!')
+    }
     return
   }
   if (config.strictMethod && matchRoute.method && matchRoute.method !== ctx.method) {
@@ -100,22 +152,26 @@ exports.match = function (pathname) {
 }
 
 // 第一次启动时加载路由文件
-exports.scanRoute = function (dir = util.appDir()) {
-  fs.readdir(dir, (err, files) => {
-    if (err) throw err
-    files.forEach(item => {
-      const filePath = path.resolve(dir, item)
-      exports.loadFileRoute(filePath)
+exports.scanRoute = async function (dir = util.appDir()) {
+  return new Promise((resolve, reject) => {
+    fs.readdir(dir, (err, files) => {
+      if (err) reject(err)
+      files.forEach(item => {
+        const filePath = path.resolve(dir, item)
+        exports.loadFileRoute(filePath)
+      })
+      resolve()
     })
   })
 }
 
 
 // 加载文件路由
-exports.loadFileRoute = function(filePath){
-  if(path.extname(filePath) !== '.js') return
+exports.loadFileRoute = function (filePath) {
+  if (path.extname(filePath) !== '.js') return
   try {
     exports.FILE = filePath
+    require.resolve
     require(filePath)
   } catch (err) {
     if (err.code === 'ENOENT') { //文件删除
