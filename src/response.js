@@ -74,10 +74,13 @@ async function respHeaders(ctx) {
 function getFileData(file) {
   return new Promise((resolve, reject) => {
     const relFile = path.isAbsolute(file) ? file : appDir(file)
-    fs.readFile(relFile, { encoding: 'utf-8' }, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
+    const read = fs.createReadStream(relFile)
+    const chunks = []
+    read.on('data', data => chunks.push(data))
+    read.on('end', () => {
+      resolve(Buffer.concat(chunks))
     })
+    read.on('error', reject)
   })
 }
 

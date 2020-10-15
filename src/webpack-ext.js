@@ -1,6 +1,6 @@
 
 const { config, setConfig } = require('./config')
-const init = require('./init')
+const apite = require('./app')
 const util = require('./util')
 
 const defaultOpt = {
@@ -8,7 +8,7 @@ const defaultOpt = {
 }
 
 function webpackExt(options = {}) {
-  setConfig({
+  apite.init({
     ...defaultOpt,
     ...options
   })
@@ -22,7 +22,7 @@ function handleApp(app, server) {
     })
     util.startLog()
   })
-  app.all(config.prefix + '/*', init.inject)
+  app.all(config.prefix + '/*', apite.handle)
 }
 
 module.exports = webpackExt

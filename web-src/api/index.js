@@ -1,28 +1,36 @@
+/**
+ * 接口文档
+ * @name 接口列表
+ * @sort 1
+ */
 const { api, delay, mock } = require('apite')
 
+api.get('/test', `测试`)
+
 /**
- * text
- * @description 这是一个描述的对吧
- * @param {number} name 用户id
- * @param {string} name 用户名
+ * @name 文本
+ * 这是一个纯文本，你可以直接用相关的方法进行处理
+ * @param {number} [name=1231] 用户id
+ * @param {string} [name='这个好啊'] 用户名
+ * @example 这个不错哦
  */
 api.get('/text', `Hello apite!`)
 
 
-// html
+// 这个还是我们的吧
 api.get('/html', ctx => {
   ctx.html(`<h1>Hello html!</h1>`)
 })
 
 /**
- * 这是文档生成工具
- * @description 这是一个描述文件
- * @param {int} id   这个还是要我们来的
+ * @name 返回文档
+ * @param {string} [name=这个好啊] 这个还是要我们来的
  * @param {boole} done 这是一个id啊
+ * @param {} name 这个好
+ * 这个东西不可能是我们来的，你说对吧
  */
-api.get('/doc', ctx=>{
-  const router = require('apite/src/router')
-  ctx.json(router.routes)
+api.get('/doc', ctx => {
+  ctx.json({ msg: 'doc' })
 })
 
 /**

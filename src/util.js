@@ -1,7 +1,5 @@
 const path = require('path')
-const { exec } = require('child_process')
 const { config } = require('./config')
-const { resolve } = require('path')
 
 // 项目根目录
 exports.cwd = function (...dir) {
@@ -18,6 +16,12 @@ exports.appDir = function (...dir) {
 exports.moduleDir = function (...dir) {
   return path.resolve(__dirname, '../', ...dir)
 }
+
+// apite doc web所在目录
+exports.webDir = function (...dir) {
+  return path.resolve(__dirname, '../web', ...dir)
+}
+
 
 // isObj
 exports.isObj = function (obj) {
@@ -52,16 +56,45 @@ exports.isJSON = function (obj) {
 }
 
 // 格式化命令行参数
-exports.parseCMD = function(){
+exports.parseCMD = function (target = {}) {
   const args = process.argv.slice(2)
   const res = {}
-  args.map(item=>{
-    if(!item.startsWith('--')) return
-    const regArr = item.match(/\-\-(\w+)(\=(\w+))?/i)
-    if(!regArr || regArr.length !== 4) return
-    res[regArr[1]] = regArr[3] === undefined ? true : regArr[3]
+  args.map(item => {
+    if (!item.startsWith('--')) return
+    const regArr = item.match(/\-\-(\w+)(\=(.*))?/i)
+    if (!regArr || regArr.length !== 4) return
+    let val = regArr[3]
+    const key = regArr[1]
+    const type = typeof target[key]
+    if (val === undefined) {
+      if (type === 'boolean') val = !!val
+      else if (type === 'number') val = 0
+      else val = ''
+    } else {
+      if (type === 'number') val = Number(val)
+    }
+    res[key] = val
   })
   res.port = res.port ? parseInt(res.port) : config.port
   res.watchDelay = res.watchDelay ? parseInt(res.watchDelay) : config.watchDelay
   return res
+}
+
+// 绑定端口
+exports.bindPort =function(port, server) {
+  this.port = this.port || port
+  return new Promise((resolve, reject) => {
+    server.listen(this.port, '0.0.0.0')
+    server.once('listening', () => {
+      resolve(this.port)
+    })
+    server.once('error', err => {
+      if (err.code === 'EADDRINUSE') {
+        this.bindPort(++this.port, server).then(resolve)
+      } else {
+        console.log('Start Server error', err.code)
+        reject(err)
+      }
+    })
+  })
 }

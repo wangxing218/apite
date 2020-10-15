@@ -34,15 +34,12 @@ function delayHandle(handle) {
 
 // 处理文件变化 
 function handleChange(event, filePath) {
-  if (require.cache[filePath]) {
-    delete require.cache[filePath]
-    router.delByFile(filePath)
-  }
-  router.loadFileRoute(filePath)
+  router.loadFileRoute(filePath, true)
 }
 
 // 兼听
 async function handleWatch() {
+  if(config.watchDelay <= 0) return
   const appDir = util.appDir()
   if (fs.existsSync(appDir)) {
     watchDir(appDir)

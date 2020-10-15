@@ -1,6 +1,6 @@
 
 const { config, setConfig } = require('./config')
-const init = require('./init')
+const apite = require('./app')
 const util = require('./util')
 
 const defaultOpt = {
@@ -8,7 +8,7 @@ const defaultOpt = {
 }
 
 function viteExt(options = {}) {
-  setConfig({
+  apite.init({
     ...defaultOpt,
     ...options
   })
@@ -28,12 +28,13 @@ function handleApp({
     })
     util.startLog()
   })
+
   app.use(async (ctx, next) => {
     if (!ctx.path.startsWith(config.prefix)) {
       await next()
       return
     }
-    await init.inject(ctx.req, ctx.res)
+    await apite.handle(ctx.req, ctx.res)
     await next()
   })
 

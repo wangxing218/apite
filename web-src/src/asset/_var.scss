@@ -1,0 +1,209 @@
+// 颜色
+$color-black: #000;
+$color-dark: #001529;
+$color-white: #FFF;
+$color-blue: #009DFF;
+$color-green: #51C419;
+$color-orange: #FF9E00;
+$color-yellow: #E6A23C;
+$color-red: #FF3B30;
+$color-gray: #989898;
+$color-text-1: #746767;
+$color-text-2: #606266;
+$color-text-3: #A8A8A8;
+$color-text-4: #CACACA;
+$color-border-1: #DCDFE6;
+$color-border-2: #EBEEF5;
+$color-border-3: #F0F0F0;
+$color-border-4: #fafafa;
+
+// 字体大小
+$font-xs: 12px;
+$font-sm: 14px;
+$font-md: 16px;
+$font-bg: 18px;
+$font-lg: 24px;
+$font-hg: 37px;
+
+// 边距填充尺寸
+$size-0: 0;
+$size-xs: 5px;
+$size-sm: 10px;
+$size-md: 15px;
+$size-bg: 20px;
+$size-lg: 30px;
+$size-hg: 50px;
+
+
+// 常见宽度定义
+$width-xs: 50px;
+$width-sm: 80px;
+$width-md: 130px;
+$width-bg: 210px;
+$width-lg: 340px;
+$width-hg: 550px;
+
+
+// 滚动条样式
+@mixin setScrollStyle {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: rgba(221, 221, 221, 0.356);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: #999;
+  }
+}
+
+// 生成颜色样式列表
+@mixin setColor($prefix, $css: color) {
+
+  @each $name,
+  $value in (black, $color-black),
+  (dark, $color-dark),
+  (white, $color-white),
+  (blue, $color-blue),
+  (green, $color-green),
+  (orange, $color-orange),
+  (yellow, $color-yellow),
+  (red, $color-red),
+  (gray, $color-gray),
+  (text-1, $color-text-1),
+  (text-2, $color-text-2),
+  (text-3, $color-text-3),
+  (text-4, $color-text-4),
+  (border-1, $color-border-1),
+  (border-2, $color-border-2),
+  (border-3, $color-border-3),
+  (border-4, $color-border-4) {
+    .#{$prefix}-#{$name} {
+      #{$css}: $value !important;
+    }
+  }
+}
+
+// 生成边距和填充尺寸
+@mixin setMarginPadding($prefix, $css) {
+
+  @each $name,
+  $size in (0, $size-0),
+  (xs, $size-xs),
+  (sm, $size-sm),
+  (md, $size-md),
+  (bg, $size-bg),
+  (lg, $size-lg),
+  (hg, $size-hg) {
+    .#{$prefix}-#{$name} {
+      @if type-of($css)==list {
+        @each $item in $css {
+          #{$item}: $size !important;
+        }
+      }
+
+      @else {
+        #{$css}: $size !important;
+      }
+    }
+  }
+}
+
+// 生成字体尺寸
+@mixin setFontSize($prefix: font) {
+
+  @each $name,
+  $size in (xs, $font-xs),
+  (sm, $font-sm),
+  (md, $font-md),
+  (bg, $font-bg),
+  (lg, $font-lg),
+  (hg, $font-hg) {
+    .#{$prefix}-#{$name} {
+      font-size: $size !important;
+    }
+  }
+}
+
+// 生成定义宽度
+@mixin setWidth($prefix: width) {
+
+  @each $name,
+  $size in (xs, $width-xs),
+  (sm, $width-sm),
+  (md, $width-md),
+  (bg, $width-bg),
+  (lg, $width-lg),
+  (hg, $width-hg),
+  (half, 50%),
+  (full, 100%),
+    {
+    .#{$prefix}-#{$name} {
+      width: $size !important;
+    }
+  }
+}
+
+// 清除浮动
+@mixin clearfix {
+
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+// 最大宽度居中
+@mixin layout() {
+  @include clearfix;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: $page-max-width;
+  min-width: $page-min-width;
+}
+
+// 阴影
+@mixin boxShadow() {
+  box-shadow: 0 2px 20px rgba(25, 125, 188, 0.1);
+}
+
+// 流海屏幕填充
+@mixin iphoneX($color: #fff, $location: bottom) {
+  box-sizing: content-box;
+  padding-bottom: env(safe-area-inset-#{$location});
+  border-bottom: env(safe-area-inset-#{$location}) solid #{$color};
+}
+
+
+// 文字超出显示小点
+@mixin textHidden() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 删格化
+@mixin splitRow() {
+  .row {
+    @include clearfix();
+  }
+
+  @for $i from 1 through 12 {
+    .col-#{$i} {
+      float: left;
+      min-height: 5px;
+      width: (100% / 12 * $i);
+    }
+  }
+}

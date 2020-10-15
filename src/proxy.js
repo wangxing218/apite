@@ -4,7 +4,6 @@ const https = require('https')
 const url = require('url')
 const { config } = require('./config')
 const { isObj } = require('./util')
-const { type } = require('os')
 
 
 async function proxy(ctx, proxy) {
@@ -26,6 +25,7 @@ async function proxy(ctx, proxy) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: parsedUrl.hostname,
+      port: parsedUrl.port,
       path: reqPath,
       method: ctx.method,
       headers: {

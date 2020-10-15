@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-const server = require('./src/server')
+const app = require('./src/app')
 const { parseCMD } = require('./src/util')
 
 const cmdConfig = parseCMD()
 
-server.run(cmdConfig)
+app.run(cmdConfig)

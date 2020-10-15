@@ -9,7 +9,10 @@ interface ExtOptions {
   prefix: string = 'api'
   jsonFormat: boolean = true
   watchDelay: number = 300
-  appDir: string = 'apite'
+  dir: string = 'api'
+  doc: string = '/'
+  docTitle: string = ''
+  docDesc: string = ''
 }
 
 declare module 'apite' {

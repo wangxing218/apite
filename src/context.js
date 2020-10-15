@@ -1,5 +1,4 @@
 const Mock = require('../lib/mock')
-const svgCaptcha = require('../lib/captcha')
 
 class context {
   constructor(req, res) {
@@ -41,10 +40,9 @@ class context {
     const opt = {
       color: '#0080ff',
       background: '#f2f6fc',
-      // height: 40,
-      // width: 126,
       ...config
     }
+    const svgCaptcha = require('../lib/captcha')
     const captcha = svgCaptcha.create(opt)
     this.type = 'svg'
     this.body = captcha.data
