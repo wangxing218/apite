@@ -1,10 +1,9 @@
 /**
- * 接口文档
- * @name 文档接口示例
  * @sort 1
+ * @name 接口列表
+ * 这是一月四日说明一个来了
  */
 const { api, delay, mock } = require('apite')
-
 
 /**
  * @name get请求
@@ -12,7 +11,7 @@ const { api, delay, mock } = require('apite')
  * @param {string} [name=get] 名称
  */
 api.get('/get', ctx=>{
-  ctx.body = ctx.query
+  ctx.error(200,'这个好')
 })
 
 /**

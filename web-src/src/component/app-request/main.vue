@@ -7,24 +7,24 @@
         <li :class="{ on: req.tab == 3 }" @click="req.tab = 3">Body</li>
       </ul>
       <ul class="form" v-show="req.tab == 1">
-        <li v-for="(item, index) in req.params" :key="item.name">
+        <li v-for="(item, index) in req.params" :key="index">
           <input
-            type="text"
             v-model="item.name"
+            type="text"
             class="input key"
             placeholder="key"
           />
           <span class="del" title="删除" @click="handleDel(index)">+</span>
           <input
-            type="text"
             v-model="item.value"
+            type="text"
             class="input"
             placeholder="value"
           />
         </li>
       </ul>
       <ul class="form" v-show="req.tab == 2">
-        <li v-for="(item, index) in req.headers" :key="item.name">
+        <li v-for="(item, index) in req.headers" :key="index">
           <input
             type="text"
             v-model="item.name"
@@ -41,7 +41,7 @@
         </li>
       </ul>
       <div class="text-area" v-show="req.tab == 3">
-        <textarea></textarea>
+        <textarea v-model="req.body"></textarea>
       </div>
       <div class="action">
         <div class="tiny-btn right" title="添加" @click="handleAdd">+</div>
@@ -255,6 +255,7 @@ import { defineComponent, onMounted, reactive, toRefs, watchEffect } from 'vue'
 import axios from 'axios'
 import nprogress from 'nprogress'
 import { getBaseUrl } from '../../service/common'
+import Toast from '../app-toast'
 
 const ajax = axios.create({
   baseURL: getBaseUrl(),
@@ -283,18 +284,29 @@ export default defineComponent({
         headers: [],
       },
     })
-    onMounted(() => {})
+    onMounted(() => {
+      renderData()
+    })
 
     // 提取数据
-    watchEffect(() => {
+    function renderData(){
       const router = { ...props.router }
       if (!router.doc) return
       if (!router.doc.params) return
-      state.req.params = [...router.doc.params].map((item) => {
-        item.value = item.default || ''
-        return item
+      state.req.params = []
+      const bodyTemp = {}
+      router.doc.params.forEach(item => {
+        let value = item.default || ''
+        state.req.params.push({
+          ...item,
+          value
+        })
+        bodyTemp[item.name] = value
       })
-    })
+      if(router.method !== 'GET'){
+        state.req.body = parseJson(bodyTemp)
+      }
+    }
 
     // 删除参数
     function handleDel(index) {
@@ -321,12 +333,19 @@ export default defineComponent({
 
     // 发送ajax请求
     function handlePost() {
-      const data = {}
+      let data = {}
+      
       const headers = {}
       state.req.params.map((item) => {
         if (!item.name) return
         data[item.name] = item.value
       })
+      if(state.req.tab === 3 && props.router.method !== 'GET'){
+        data = strToJson(state.req.body)
+        if(Object.keys(data).length){
+          state.req.body = parseJson(data)
+        }
+      }
       state.req.headers.map((item) => {
         if (!item.name) return
         headers[item.name] = item.value
@@ -345,7 +364,7 @@ export default defineComponent({
         .catch((err) => {
           console.log('err', err)
           state.resp.type = 'text'
-          state.resp.body = err.msg
+          state.resp.body = err
         })
         .finally(() => {
           nprogress.done()
@@ -364,8 +383,24 @@ export default defineComponent({
       state.resp.body =
         typeof resp.data == 'string'
           ? resp.data
-          : JSON.stringify(resp.data, null, '  ')
+          : parseJson(resp.data)
       state.resp.type = 'text'
+    }
+
+    // json格式化
+    function parseJson(json){
+      return JSON.stringify(json, null, 2)
+    }
+
+    // 字符串转json
+    function strToJson(str){
+      try {
+        const res = eval(`(${str})`)
+        if(res && typeof res === 'object') return res
+        return {}
+      } catch (error) {
+        return {}
+      }
     }
 
     // 大小写转换

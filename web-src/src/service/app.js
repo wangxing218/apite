@@ -3,7 +3,7 @@ import { getData } from './api'
 import AppRequest from '../component/app-request'
 
 export default defineComponent({
-  components: {AppRequest},
+  components: { AppRequest },
   setup() {
     const state = reactive({
       // 文档信息
@@ -20,13 +20,23 @@ export default defineComponent({
     })
 
     // 获取数据 
-    async function initData(){
+    async function initData() {
       const { result } = await getData()
+      if (result.info.desc) {
+        result.info.desc = await parseMarkDown(result.info.desc)
+      }
       state.info = {
         title: result.info.title,
         desc: result.info.desc,
       }
       state.data = renderData(result)
+    }
+
+    // 格式化md文档
+    async function parseMarkDown(str) {
+      await import('../asset/md.css')
+      const res = await import('marked/lib/marked.esm')
+      return res.default.parse(str) || ''
     }
 
     // 格式化数据 
@@ -36,7 +46,7 @@ export default defineComponent({
         if (!result.routes) return
         item.routes = []
         result.routes.map(router => {
-          if(!router.file || router.file !== item.file) return
+          if (!router.file || router.file !== item.file) return
           router.doc.name = router.doc.name || router.url
           item.routes.push(router)
         })
@@ -44,20 +54,20 @@ export default defineComponent({
       return res
     }
 
-    // 换行替换为p
+    // 换行替换p标签
     function toHtml(text = '') {
-      const arr = text.split('\n')
+      const arr = text.split(/[\r|\n]/)
       if (!arr.length) return `<p>${text}</p>`
       return `<p>${arr.join('</p><p>')}</p>`
     }
 
     // 获取api锚点id
-    function getMark(item){
+    function getMark(item) {
       return 'api_' + item.method.toLowerCase() + item.url
     }
 
     // 跳转到指定api
-    function scrollTo(item){
+    function scrollTo(item) {
       const el = document.getElementById(getMark(item))
       el && el.scrollIntoView({
         behavior: 'smooth'

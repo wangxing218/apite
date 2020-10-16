@@ -1,14 +1,13 @@
+
 /**
- * 用户相关
- * 这个是我们的相关描述
- * 来了就是我们的人了，哈哈
- * @sort 2
+ * @name 用户管理模块
+ * @sort 3
+ * 这是一个非常好用的方法，你觉得怎么样啊
  */
 
-const { api } = require('apite')
+const {api} = require('apite')
 
 
-// 我的用户
-api.get('/user', {
-  user: '1'
+api.post('/addUser', {
+  code: 0
 })

@@ -21,7 +21,7 @@
         <!-- doc info -->
         <div class="card" v-if="info.title || info.desc">
           <h1 class="doc-title" v-if="info.title">{{ info.title }}</h1>
-          <div class="doc-desc" v-if="info.desc" v-html="toHtml(info.desc)"></div>
+          <div class="doc-desc markdown-body" v-if="info.desc" v-html="info.desc"></div>
         </div>
 
         <!-- file mod -->
