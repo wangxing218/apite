@@ -7,7 +7,7 @@ const router = require('./router')
 const watch = require('./watch')
 const static = require('./static')
 const context = require('./context')
-const doc = require('./doc')
+const docRouter = require('./doc-router')
 
 // 处理请求
 async function handle(req, res) {
@@ -34,7 +34,7 @@ async function init(options = {}) {
   setConfig({ ...options })
   await watch.handleWatch()
   await router.scanRoute()
-  await doc.docRouter()
+  await docRouter.docRouter()
   return
 }
 

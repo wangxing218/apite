@@ -1,15 +1,14 @@
 import axios from 'axios'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
+import { getBaseUrl } from './common'
 nprogress.configure({
   showSpinner: false
 })
 
-const isDev = process.env.NODE_ENV === 'dev'
-
 // 通用配置
 const baseConfig = {
-  baseURL: isDev ? '/api/' : location.pathname,
+  baseURL: getBaseUrl(),
   headers: {
     'X-Requested-With': 'XMLHttpRequest'
   },

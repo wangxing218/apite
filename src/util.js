@@ -45,9 +45,8 @@ exports.random = function (from = 1, to = 10) {
 // 输出提示
 exports.startLog = function () {
   console.log(`
-Apite Server is running at \n
-  \x1B[32mhttp://localhost:${config.port}${config.prefix}/\x1B[39m
-  `)
+  Apite server running at: 
+  > Doc:      \x1B[32mhttp://localhost:${config.port}${config.prefix}${config.doc}\x1B[39m`)
 }
 
 // 判断对象是否为JSON

@@ -3,10 +3,12 @@ const { config, setConfig } = require('./config')
 const apite = require('./app')
 const util = require('./util')
 
+// 默认配置
 const defaultOpt = {
   prefix: '/api'
 }
 
+// 插件入口
 function viteExt(options = {}) {
   apite.init({
     ...defaultOpt,
@@ -22,13 +24,13 @@ function handleApp({
   watcher,
   port, // chokidar file watcher instance
 }) {
-  app.listen(() => {
+  server.on('listening', () => {
+    const port = server.address().port
     setConfig({
       port,
     })
     util.startLog()
   })
-
   app.use(async (ctx, next) => {
     if (!ctx.path.startsWith(config.prefix)) {
       await next()

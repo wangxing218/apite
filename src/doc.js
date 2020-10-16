@@ -1,9 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const { config } = require('./config')
-const router = require('./router')
 const docTool = require('./doc-tool')
-const { webDir } = require('./util')
 
 
 // 文件注释数据 
@@ -93,37 +91,9 @@ function renderFileDoc(content, filePath) {
   FileDoc.push(res)
 }
 
-// 挂载路由展示前端页面
-async function docRouter() {
-  if (typeof config.doc !== 'string' || !config.doc) return
-  // 首页
-  router.get(config.doc, ctx => {
-    ctx.file = webDir('index.html')
-  })
-  // 静态目录
-  router.get('/_doc_static/*', ctx => {
-    ctx.file = webDir('_doc_static', ctx.path.substr(13))
-  })
-  // api
-  router.get('/_doc_api/data', ctx => {
-    ctx.json({
-      code: 0,
-      msg: 'ok',
-      result: {
-        info: {
-          title: config.docTitle,
-          desc: config.docDesc,
-          prefix: config.prefix,
-        },
-        files: FileDoc.sort((a, b) => { return a.sort - b.sort }),
-        routes: router.routes
-      }
-    })
-  })
-}
 
 module.exports = {
+  FileDoc,
   jsFileDoc,
   matchDoc,
-  docRouter,
 }

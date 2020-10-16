@@ -1,23 +1,41 @@
 /**
  * 接口文档
- * @name 接口列表
+ * @name 文档接口示例
  * @sort 1
  */
 const { api, delay, mock } = require('apite')
 
-api.get('/test', `测试`)
+
+/**
+ * @name get请求
+ * 请设置params参数试试
+ * @param {string} [name=get] 名称
+ */
+api.get('/get', ctx=>{
+  ctx.body = ctx.query
+})
+
+/**
+ * @name post请求
+ * 请设置params参数试试
+ * @param {string} [name=post] 名称
+ */
+api.post('/post', ctx=>{
+  ctx.json(ctx.post)
+})
 
 /**
  * @name 文本
  * 这是一个纯文本，你可以直接用相关的方法进行处理
- * @param {number} [name=1231] 用户id
- * @param {string} [name='这个好啊'] 用户名
- * @example 这个不错哦
+ * @param {number} id 用户id112
+ * @param {string} name 用户名
+ * @param {string} sex 性别哦
  */
 api.get('/text', `Hello apite!`)
 
 
-// 这个还是我们的吧
+
+// html
 api.get('/html', ctx => {
   ctx.html(`<h1>Hello html!</h1>`)
 })

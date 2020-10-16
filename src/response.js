@@ -3,7 +3,7 @@ const fs = require('fs')
 const mime = require('../lib/mime')
 const Mock = require('../lib/mock')
 const { config } = require('./config')
-const { isJSON, appDir } = require('./util')
+const { isObj, appDir } = require('./util')
 
 // 处理输出
 async function handleBody(ctx) {
@@ -26,7 +26,8 @@ async function respBody(ctx) {
   }
   if (typeof ctx.body === 'string') return
   if (ctx.body instanceof Buffer) return
-  else if (ctx.type === 'json' || ctx.type === 'jsonp' || isJSON(ctx.body)) {
+  
+  else if (ctx.type === 'json' || ctx.type === 'jsonp' || isObj(ctx.body)) {
     ctx.type = ctx.type || 'json'
     const callback = ctx.query.callback || 'callback'
     if (config.mock) {
@@ -49,7 +50,7 @@ async function respHeaders(ctx) {
   let contentType = mime.contentType(ctx.type)
   if (ctx.file) {
     contentType = ctx.status === 404 ? null : mime.contentType(path.extname(ctx.file))
-  } else if (!ctx.type && isJSON(ctx.body)) {
+  } else if (!ctx.type && isObj(ctx.body)) {
     ctx.type = 'json'
     contentType = mime.contentType('json')
   } else if (ctx.type === 'jsonp') {

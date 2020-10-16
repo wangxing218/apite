@@ -24,6 +24,7 @@ body {
   line-height: 1.4;
   color: #333;
   margin: 0;
+  background-color: #fafafa;
 }
 
 h1,
@@ -59,4 +60,52 @@ img {
 }
 .text-right{
   text-align: left !important;
+}
+
+.tiny-btn{
+  user-select: none;
+  position: relative;
+  display: inline-block;
+  height: 30px;
+  line-height: 28px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  padding: 0 12px;
+  font-size: 12px;
+  text-align: center;
+  margin-left: 80px;
+  margin-right: 90px;
+  cursor: pointer;
+  color: #999;
+  transition: all .2s;
+  &:hover{
+    color: #4fc08d;
+    border-color: #4fc08d;
+  }
+  &::before,&::after{
+    content: "";
+    position: absolute;
+    top: 49%;
+    right: 101%;
+    height: 1px;
+    width: 80px;
+    background-color: #eee;
+  }
+  
+  &::after{
+    right: auto;
+    left: 101%;
+  }
+  &.right{
+    &::before{display: none;}
+     margin-left: 0;
+  }
+  &.left{
+    &::after{display: none;}
+     margin-right: 0;
+  }
+  &.small{
+    height: 22px;
+    line-height: 20px;
+  }
 }

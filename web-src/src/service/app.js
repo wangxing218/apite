@@ -1,24 +1,33 @@
 import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import { getData } from './api'
+import AppRequest from '../component/app-request'
+
 export default defineComponent({
+  components: {AppRequest},
   setup() {
     const state = reactive({
       // 文档信息
       info: {},
       // 数据列表
       data: [],
+      // 是否显示目录
+      showMenu: false,
     })
 
     // 初始化
     onMounted(async () => {
+      initData()
+    })
+
+    // 获取数据 
+    async function initData(){
       const { result } = await getData()
       state.info = {
         title: result.info.title,
         desc: result.info.desc,
       }
       state.data = renderData(result)
-      console.log(state.data)
-    })
+    }
 
     // 格式化数据 
     function renderData(result) {

@@ -6,8 +6,17 @@
   "bin": {
     "apite": "cli.js"
   },
+  "files": [
+    "lib",
+    "src",
+    "web",
+    "cli.js",
+    "index.js",
+    "index.d.ts"
+  ],
   "scripts": {
-    "dev": "cd ./test && apite --port=9000"
+    "dev": "cd ./web-src && npm run dev",
+    "build": "cd ./web-src && npm run build"
   },
   "repository": {
     "type": "git",
