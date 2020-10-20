@@ -4,7 +4,7 @@
       <div class="tiny-btn left" @click="showMenu = !showMenu">目录</div>
     </div>
     <div class="side" :class="{show: showMenu}">
-      <h2 class="logo">APITE DOC</h2>
+      <h2 class="logo" @click="scrollTop">APITE DOC</h2>
       <ul class="nav">
         <li v-for="item in data" :key="item.file">
           <div class="title" :class="{close: item.close}" @click="item.close = !item.close">{{ item.name }}</div>
@@ -50,7 +50,7 @@
               <div class="api-method">
                 <span class="mark">类型</span>{{ item.method }}
               </div>
-              <div class="api-params" v-if="item.doc.params">
+              <div class="api-params" v-if="item.doc.params && item.doc.params.length">
                 <table class="table">
                   <thead>
                     <tr>
@@ -74,7 +74,7 @@
                   </tbody>
                 </table>
               </div>
-              <div class="tiny-btn right" @click="item.debug = !item.debug ">在线调试</div>
+              <div class="tiny-btn right" @click="item.debug = true ">在线调试</div>
               <app-request v-if="item.debug" :router="item"></app-request>
             </div>
           </div>
@@ -104,14 +104,13 @@
   position: fixed;
   top: 0;
   bottom: 0;
-  height: 100%;
-  overflow: hidden auto;
+  overflow: hidden;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   width: 200px;
   padding: 0 15px 30px;
-  z-index: 3;
+  z-index: 2;
   background-color: #fff;
-  
 }
 
 .logo {
@@ -191,10 +190,10 @@
   font-size: 28px;
   padding: 10px 0;
   border-bottom: 1px solid rgba(204, 204, 204, 0.3);
-  margin-bottom: 10px;
 }
 .doc-desc {
   padding: 5px 0;
+  margin-top: 10px;
   margin-bottom: 10px;
   font-size: 14px;
   line-height: 22px;

@@ -33,8 +33,13 @@ async function respBody(ctx) {
     if (config.mock) {
       Mock.mock(ctx.body)
     }
-    let res = JSON.stringify(ctx.body || {}, null, config.jsonFormat ? '  ' : null)
-    ctx.body = ctx.type === 'jsonp' ? `${callback}(${res})` : res
+    try {
+      let res = JSON.stringify(ctx.body || {}, null, config.jsonFormat ? '  ' : null)
+      ctx.body = ctx.type === 'jsonp' ? `${callback}(${res})` : res
+    } catch (error) {
+      console.log(error)
+      ctx.error(500, 'Router handle has error!')
+    }
     return
   }
 }
@@ -87,5 +92,6 @@ function getFileData(file) {
 
 
 module.exports = {
-  handleBody
+  handleBody,
+  getFileData,
 }

@@ -31,11 +31,27 @@ async function run(options) {
 
 // 初始化
 async function init(options = {}) {
-  setConfig({ ...options })
+  await initConfig(options)
   await watch.handleWatch()
   await router.scanRoute()
   await docRouter.docRouter()
-  return
+}
+
+// 配置初始化, 看是否有根目录的配置文件
+async function initConfig(options = {}) {
+  setConfig({
+    ...options,
+  })
+  if(!config.config) return
+  let fileConfig = {}
+  try {
+    fileConfig = require(util.cwd(config.config))
+  } catch (err) {
+
+  }
+  setConfig({
+    ...fileConfig,
+  })
 }
 
 module.exports = {

@@ -65,6 +65,30 @@ $width-hg: 550px;
   }
 }
 
+// 引入自定义自体
+@mixin importIcon() {
+  @font-face {
+    font-family: 'ui-icon';
+    src: url('./font/ui-icon.woff') format('woff'), url('./font/ui-icon.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal
+  }
+
+  .ui-icon {
+    font-family: 'ui-icon' !important;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    vertical-align: middle;
+    font-size: 1.2em;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+  }
+}
+
 // 生成颜色样式列表
 @mixin setColor($prefix, $css: color) {
 

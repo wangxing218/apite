@@ -1,7 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const util = require('./util')
-const { matchDoc, jsFileDoc } = require('./doc')
+const { jsFileDoc, delFileDoc } = require('./doc')
 const { config } = require('./config')
 const proxy = require('./proxy')
 const { fips } = require('crypto')
@@ -16,6 +16,8 @@ const FILE = {
 // 添加路由信息
 exports.addRoute = function ({ url, handle, method, options }) {
   if (handle === null || handle === undefined) return
+  url = url.trim()
+  url = url.indexOf('/') === 0 ? url : '/' + url
   exports.unique(url, method)
   if (options === true || options === 1) {
     options = {
@@ -139,7 +141,7 @@ exports.handleRoute = async function (ctx) {
   if (matchRoute.options && matchRoute.options.proxy) { //代理
     const proxyTarget = matchRoute.options.proxy === true ? config.proxy : matchRoute.options.proxy
     if (!proxyTarget) {
-      ctx.err(500, 'Please config your proxy url!')
+      ctx.error(500, 'Please config your proxy url!')
     }
     try {
       const resp = await proxy(ctx, proxyTarget)
@@ -155,6 +157,7 @@ exports.handleRoute = async function (ctx) {
     ctx.error(506, 'Request method not supported!')
   } else if (typeof matchRoute.handle === 'function') {
     const res = await matchRoute.handle(ctx)
+
     if (res && !ctx.body) ctx.body = res
   } else {
     ctx.body = matchRoute.handle
@@ -178,7 +181,7 @@ exports.scanRoute = async function (dir = util.appDir()) {
 
 // 加载文件路由
 exports.loadFileRoute = function (filePath, noCache = false) {
-  if(noCache === true){
+  if (noCache === true) {
     if (require.cache[filePath]) {
       delete require.cache[filePath]
       exports.delByFile(filePath)
@@ -191,6 +194,7 @@ exports.loadFileRoute = function (filePath, noCache = false) {
     jsFileDoc(filePath, exports.routes)
   } catch (err) {
     if (err.code === 'ENOENT') { //文件删除
+      delFileDoc(filePath)
       return
     }
     console.warn(`【js file】:  ${filePath} has error, please check！\n`, err)

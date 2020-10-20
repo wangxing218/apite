@@ -8,7 +8,7 @@ const docTool = require('./doc-tool')
 const FileDoc = []
 
 // 解析文件成jsdoc
-async function jsFileDoc(filePath, routes) {
+async function jsFileDoc(filePath, routes = []) {
   if (!config.doc) return
   delFileDoc(filePath)
   const fileRoutes = routes.filter(item => item.file && item.file === filePath)
@@ -53,7 +53,7 @@ function matchDoc(content = '', routes, filePath) {
     }[router.method] || 'all'
 
     // 单行注释只匹配标题
-    const singleReg = new RegExp(`\\/\\/\\s*(.*?)[\\r\\n]+\\s*api\\.${method}\\(\\s*['"]${router.url}`)
+    const singleReg = new RegExp(`\\/\\/\\s*(.*?)[\\r\\n]+\\s*api\\.${method}\\(\\s*['"]${router.url}['"]`)
     const singleRes = content.match(singleReg)
 
     if (singleRes && singleRes[1]) {
@@ -94,6 +94,7 @@ function renderFileDoc(content, filePath) {
 
 module.exports = {
   FileDoc,
+  delFileDoc,
   jsFileDoc,
   matchDoc,
 }

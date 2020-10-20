@@ -74,11 +74,21 @@ export default defineComponent({
       })
     }
 
+    // 返回顶部
+    function scrollTop() {
+      window.scrollTo({
+        left: 0,
+        top: 0,
+        behavior: 'smooth'
+      })
+    }
+
     return {
       ...toRefs(state),
       toHtml,
       getMark,
       scrollTo,
+      scrollTop,
     }
   }
 })

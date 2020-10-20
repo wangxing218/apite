@@ -44,9 +44,10 @@ exports.random = function (from = 1, to = 10) {
 
 // 输出提示
 exports.startLog = function () {
+  const docPath = config.doc && config.doc.startsWith('/') ? config.doc : '/' + (config.doc || '/')
   console.log(`
   Apite server running at: 
-  > Doc:      \x1B[32mhttp://localhost:${config.port}${config.prefix}${config.doc}\x1B[39m`)
+  > Doc:      \x1B[32mhttp://localhost:${config.port}${config.prefix}${docPath}\x1B[39m`)
 }
 
 // 判断对象是否为JSON
@@ -54,7 +55,7 @@ exports.isJSON = function (obj) {
   return obj && typeof obj !== 'string' && obj.toString && obj.toString() === '[object Object]'
 }
 
-// 格式化命令行参数
+// 格式化命令行参数，如 apite --port=9000 
 exports.parseCMD = function (target = {}) {
   const args = process.argv.slice(2)
   const res = {}
@@ -66,16 +67,16 @@ exports.parseCMD = function (target = {}) {
     const key = regArr[1]
     const type = typeof target[key]
     if (val === undefined) {
-      if (type === 'boolean') val = !!val
+      if (type === 'boolean') val = true
       else if (type === 'number') val = 0
       else val = ''
     } else {
       if (type === 'number') val = Number(val)
+      if (type === 'boolean') val = (val == '0' || val == 'false') ? false : true
     }
     res[key] = val
   })
-  res.port = res.port ? parseInt(res.port) : config.port
-  res.watchDelay = res.watchDelay ? parseInt(res.watchDelay) : config.watchDelay
+  
   return res
 }
 

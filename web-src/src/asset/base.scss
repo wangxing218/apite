@@ -1,7 +1,8 @@
-
 @import "./var";
 
 @include setScrollStyle;
+
+@include importIcon;
 
 * {
   box-sizing: border-box;
@@ -52,17 +53,24 @@ img {
   border-style: none;
 }
 
-.text-left{
-  text-align: left !important;
-}
-.text-center{
-  text-align: center !important;
-}
-.text-right{
+.text-left {
   text-align: left !important;
 }
 
-.tiny-btn{
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: left !important;
+}
+.markdown-body li{
+  list-style: initial;
+}
+.markdown-body ol li{
+  list-style: decimal;
+}
+.tiny-btn {
   user-select: none;
   position: relative;
   display: inline-block;
@@ -78,11 +86,14 @@ img {
   cursor: pointer;
   color: #999;
   transition: all .2s;
-  &:hover{
+
+  &:hover {
     color: #4fc08d;
     border-color: #4fc08d;
   }
-  &::before,&::after{
+
+  &::before,
+  &::after {
     content: "";
     position: absolute;
     top: 49%;
@@ -91,21 +102,40 @@ img {
     width: 80px;
     background-color: #eee;
   }
-  
-  &::after{
+
+  &::after {
     right: auto;
     left: 101%;
   }
-  &.right{
-    &::before{display: none;}
-     margin-left: 0;
+
+  &.right {
+    &::before {
+      display: none;
+    }
+
+    margin-left: 0;
   }
-  &.left{
-    &::after{display: none;}
-     margin-right: 0;
+
+  &.left {
+    &::after {
+      display: none;
+    }
+
+    margin-right: 0;
   }
-  &.small{
+
+  &.small {
     height: 22px;
     line-height: 20px;
+  }
+
+  &.none {
+
+    &::before,
+    &::after {
+      display: none;
+    }
+    margin-left: 0;
+    margin-right: 10px;
   }
 }

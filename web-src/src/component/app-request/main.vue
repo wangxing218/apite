@@ -44,8 +44,15 @@
         <textarea v-model="req.body"></textarea>
       </div>
       <div class="action">
-        <div class="tiny-btn right" title="添加" @click="handleAdd">+</div>
-        <div class="tiny-btn left" @click="handlePost">发送</div>
+        <div class="tiny-btn none" title="添加参数" @click="handleAdd">
+          <i class="ui-icon">&#xe623;</i>
+        </div>
+        <div class="tiny-btn none" title="重置" @click="handleReset">
+          <i class="ui-icon">&#xe65c;</i>
+        </div>
+        <div class="action-right">
+          <div class="tiny-btn left" @click="handlePost">发送</div>
+        </div>
       </div>
     </div>
     <div class="resp">
@@ -96,22 +103,25 @@ $min-height: 240px;
   background-color: #fff;
 }
 @media screen and (max-width: 980px) {
-  .req{
+  .req {
     flex-direction: column;
   }
-  .post{
+  .post {
     width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+    min-height: 220px;
   }
-  .resp{
+  .resp {
     width: 100%;
-    min-height: 280px;
-  }
-  .text-area > textarea{
     min-height: 200px;
   }
-  .resp-data{
-    .text-area > textarea{
-      min-height: 280px;
+  .text-area > textarea {
+    min-height: 140px;
+  }
+  .resp-data {
+    .text-area > textarea {
+      min-height: 190px;
     }
   }
 }
@@ -139,6 +149,11 @@ $min-height: 240px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.action-right {
+  text-align: right;
+  flex: 1;
+  width: 1%;
 }
 .form {
   position: relative;
@@ -289,22 +304,16 @@ export default defineComponent({
     })
 
     // 提取数据
-    function renderData(){
+    function renderData() {
       const router = { ...props.router }
       if (!router.doc) return
       if (!router.doc.params) return
-      state.req.params = []
-      const bodyTemp = {}
-      router.doc.params.forEach(item => {
-        let value = item.default || ''
-        state.req.params.push({
-          ...item,
-          value
-        })
-        bodyTemp[item.name] = value
-      })
-      if(router.method !== 'GET'){
-        state.req.body = parseJson(bodyTemp)
+      const fmtBody = formatBody()
+      console.log(fmtBody.arr)
+      state.req.params = fmtBody.arr
+      if (router.method === 'POST') {
+        state.req.body = parseJson(fmtBody.res)
+        state.req.tab = 3
       }
     }
 
@@ -328,24 +337,38 @@ export default defineComponent({
           name: 'Header-Key' + (state.req.headers.length + 1),
           value: '',
         })
+      } else if (state.req.tab == 3) {
+        if (props.router.method !== 'POST') return
+        const bodyTemp = strToJson(state.req.body)
+        const keyLen = Object.keys(bodyTemp).length || 0
+        bodyTemp['key' + (keyLen + 1)] = ''
+        state.req.body = parseJson(bodyTemp)
       }
+    }
+
+    // 恢复参数
+    function handleReset() {
+      state.req.params = []
+      state.req.headers = []
+      state.req.body = ''
+      state.resp.headers = []
+      state.resp.body = ''
+      renderData()
     }
 
     // 发送ajax请求
     function handlePost() {
       let data = {}
-      
-      const headers = {}
-      state.req.params.map((item) => {
-        if (!item.name) return
-        data[item.name] = item.value
-      })
-      if(state.req.tab === 3 && props.router.method !== 'GET'){
+      let headers = {}
+
+      if (state.req.tab === 1) {
+        state.req.params.forEach((item) => {
+          data[item.name] = item.value
+        })
+      }else if (state.req.tab === 3 && props.router.method !== 'GET') {
         data = strToJson(state.req.body)
-        if(Object.keys(data).length){
-          state.req.body = parseJson(data)
-        }
       }
+
       state.req.headers.map((item) => {
         if (!item.name) return
         headers[item.name] = item.value
@@ -357,8 +380,8 @@ export default defineComponent({
         url: router.url,
         method: router.method,
         headers,
-        params: router.method === 'GET' ? data : undefined,
-        data: router.method !== 'GET' ? data : undefined,
+        params: router.method !== 'POST' ? data : undefined,
+        data: router.method === 'POST' ? data : undefined,
       })
         .then(parseBody)
         .catch((err) => {
@@ -371,32 +394,58 @@ export default defineComponent({
         })
     }
 
+    // 按类型对params 数据 进行格式化
+    function formatBody(res = {}) {
+      const arr = []
+      props.router.doc.params.forEach((item) => {
+        const type = item.type.toLowerCase()
+        let value = item.default || ''
+        if (['number', 'int', 'integer', 'double', 'float'].includes(type)) {
+          value = Number(item.default || item.value)
+          value = isNaN(value) ? 0 : value
+        } else if (['boolean', 'bool'].includes(type)) {
+          value = item.value === undefined ? item.default : item.value
+          value =
+            value === 'false' || value === '0' || value === '' ? false : true
+        }
+        arr.push({
+          ...item,
+          value,
+        })
+        res[item.name] = value
+      })
+      return {
+        res,
+        arr,
+      }
+    }
+
     // 处理返回的数据
     function parseBody(resp) {
       state.resp.headers = resp.headers
       const contentType = resp.headers['content-type']
       if (contentType.indexOf('image/') === 0) {
         state.resp.type = 'image'
-        state.resp.body = resp.request.responseURL
+        const searchChar = resp.request.responseURL.indexOf('?') + 1 ? '&' : '?'
+        state.resp.body =
+          resp.request.responseURL + searchChar + '_r=' + Date.now()
         return
       }
       state.resp.body =
-        typeof resp.data == 'string'
-          ? resp.data
-          : parseJson(resp.data)
+        typeof resp.data == 'string' ? resp.data : parseJson(resp.data)
       state.resp.type = 'text'
     }
 
     // json格式化
-    function parseJson(json){
+    function parseJson(json) {
       return JSON.stringify(json, null, 2)
     }
 
     // 字符串转json
-    function strToJson(str){
+    function strToJson(str) {
       try {
         const res = eval(`(${str})`)
-        if(res && typeof res === 'object') return res
+        if (res && typeof res === 'object') return res
         return {}
       } catch (error) {
         return {}
@@ -412,6 +461,7 @@ export default defineComponent({
 
     return {
       ...toRefs(state),
+      handleReset,
       handleAdd,
       handlePost,
       handleDel,
