@@ -1,7 +1,7 @@
 {
   "name": "apite",
-  "version": "1.0.1",
-  "description": "一个用于前后端协作的api接口文档生成和联调工具",
+  "version": "1.1.1",
+  "description": "一个基于nodejs的轻量级api生成工具",
   "main": "index.js",
   "bin": {
     "apite": "cli.js"
@@ -26,5 +26,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "homepage": "https://github.com/wangxing218/apite#readme"
+  "homepage": "https://apite.frp.boyxing.com/"
 }

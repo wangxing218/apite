@@ -22,7 +22,7 @@ if (action === '-v') {
 if (action === 'init') {
   console.log('Apite project initializing...')
   cmd('npm', ['init', '-y']).then(() => {
-    const pkgFile = cwd('package.json')
+    const pkgFile = util.cwd('package.json')
     const pgk = require(pkgFile)
     pgk.scripts = pgk.scripts || {}
     pgk.scripts['apite'] = 'apite --dir=api'
@@ -30,7 +30,7 @@ if (action === 'init') {
   }).then(() => {
     return cmd('npm', ['install', '-S', 'apite'], true)
   }).then(() => {
-    const apiDir = cwd('api')
+    const apiDir = util.cwd('api')
     const exists = fs.existsSync(apiDir)
     if (!exists) {
       fs.mkdirSync(apiDir)

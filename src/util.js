@@ -44,10 +44,11 @@ exports.random = function (from = 1, to = 10) {
 
 // 输出提示
 exports.startLog = function () {
-  const docPath = config.doc && config.doc.startsWith('/') ? config.doc : '/' + (config.doc || '/')
+  const text = config.doc ? 'Doc' : 'Api'
+  const docPath = config.doc && config.doc.startsWith('/') ? config.doc : '/' + (config.doc || '')
   console.log(`
   Apite server running at: 
-  > Doc:      \x1B[32mhttp://localhost:${config.port}${config.prefix}${docPath}\x1B[39m`)
+  > ${text}:      \x1B[32mhttp://localhost:${config.port}${config.prefix}${docPath}\x1B[39m`)
 }
 
 // 判断对象是否为JSON
