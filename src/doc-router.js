@@ -29,7 +29,7 @@ async function docRouter() {
       item.file = item.file.indexOf(appPath) === 0 ? item.file.substr(appPath.length) : item.file
     })
     // 路由
-    const routes = [...router.routes].map(item => {
+    const routes = JSON.parse(JSON.stringify(router.routes)).map(item => {
       item.file = item.file && item.file.indexOf(appPath) === 0 ? item.file.substr(appPath.length) : item.file
       return item
     })

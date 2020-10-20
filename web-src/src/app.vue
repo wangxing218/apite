@@ -104,7 +104,7 @@
   position: fixed;
   top: 0;
   bottom: 0;
-  overflow: hidden;
+  overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   width: 200px;

@@ -1,12 +1,11 @@
 const path = require('path')
 const fs = require('fs')
 const util = require('./util')
-const { jsFileDoc, delFileDoc } = require('./doc')
+const { jsFileDoc } = require('./doc')
 const { config } = require('./config')
 const proxy = require('./proxy')
-const { fips } = require('crypto')
 
-exports.routes = []
+const routes = []
 
 // 当前正在加载的路由文件
 const FILE = {
@@ -14,11 +13,11 @@ const FILE = {
 }
 
 // 添加路由信息
-exports.addRoute = function ({ url, handle, method, options }) {
+function addRoute({ url, handle, method, options }) {
   if (handle === null || handle === undefined) return
   url = url.trim()
   url = url.indexOf('/') === 0 ? url : '/' + url
-  exports.unique(url, method)
+  unique(url, method)
   if (options === true || options === 1) {
     options = {
       proxy: true
@@ -34,36 +33,36 @@ exports.addRoute = function ({ url, handle, method, options }) {
   if (FILE.path) {
     data.file = FILE.path
   }
-  exports.routes.push(data)
+  routes.push(data)
 }
 
 
 // 删除重复路由
-exports.unique = function (url, method) {
+function unique(url, method) {
   const key = method + url
   const exited = []
-  exports.routes.forEach((item, index) => {
+  routes.forEach((item, index) => {
     if (item.method + item.url === key)
       exited.push(index)
   })
   if (!exited.length) return
-  exited.map(index => exports.routes.splice(index, 1))
+  exited.map(index => routes.splice(index, 1))
 }
 
 // 按文件删除路由
-exports.delByFile = function (file) {
+function delByFile(file) {
   const cols = []
-  exports.routes.forEach((item, index) => {
+  routes.forEach((item, index) => {
     if (item.file && item.file === file) {
       cols.push(index)
     }
   })
-  cols.reverse().forEach(index => exports.routes.splice(index, 1))
+  cols.reverse().forEach(index => routes.splice(index, 1))
 }
 
 // 不限请求
-exports.all = function all(url, handle, options) {
-  exports.addRoute({
+function all(url, handle, options) {
+  addRoute({
     url,
     handle,
     method: '',
@@ -72,8 +71,8 @@ exports.all = function all(url, handle, options) {
 }
 
 // get请求
-exports.get = function (url, handle, options) {
-  exports.addRoute({
+function get(url, handle, options) {
+  addRoute({
     url,
     handle,
     method: 'GET',
@@ -82,8 +81,8 @@ exports.get = function (url, handle, options) {
 }
 
 // post请求
-exports.post = function (url, handle, options) {
-  exports.addRoute({
+function post(url, handle, options) {
+  addRoute({
     url,
     handle,
     method: 'POST',
@@ -92,8 +91,8 @@ exports.post = function (url, handle, options) {
 }
 
 // put请求
-exports.put = function (url, handle, options) {
-  exports.addRoute({
+function put(url, handle, options) {
+  addRoute({
     url,
     handle,
     method: 'PUT',
@@ -101,9 +100,9 @@ exports.put = function (url, handle, options) {
   })
 }
 
-// put请求
-exports.del = function (url, handle, options) {
-  exports.addRoute({
+// del请求
+function del(url, handle, options) {
+  addRoute({
     url,
     handle,
     method: 'DELETE',
@@ -112,9 +111,9 @@ exports.del = function (url, handle, options) {
 }
 
 // 匹配路由, 只匹配第一条就结束
-exports.match = function (pathname) {
+function match(pathname) {
   let matchRoute = null
-  exports.routes.every(item => {
+  routes.every(item => {
     if (item.url === pathname) {
       matchRoute = item
       return false
@@ -132,8 +131,8 @@ exports.match = function (pathname) {
 }
 
 // 路由处理
-exports.handleRoute = async function (ctx) {
-  const matchRoute = exports.match(ctx.path)
+async function handleRoute(ctx) {
+  const matchRoute = match(ctx.path)
   if (!matchRoute || matchRoute.handle === undefined || matchRoute.handle === null) {
     ctx.error()
     return
@@ -165,13 +164,13 @@ exports.handleRoute = async function (ctx) {
 }
 
 // 第一次启动时加载路由文件
-exports.scanRoute = async function (dir = util.appDir()) {
+async function scanRoute(dir = util.appDir()) {
   return new Promise((resolve, reject) => {
     fs.readdir(dir, (err, files) => {
       if (err) reject(err)
       files.forEach(item => {
         const filePath = path.resolve(dir, item)
-        exports.loadFileRoute(filePath)
+        loadFileRoute(filePath)
       })
       resolve()
     })
@@ -180,21 +179,21 @@ exports.scanRoute = async function (dir = util.appDir()) {
 
 
 // 加载文件路由
-exports.loadFileRoute = function (filePath, noCache = false) {
+function loadFileRoute(filePath, noCache = false) {
+  if(!filePath) return
   if (noCache === true) {
     if (require.cache[filePath]) {
       delete require.cache[filePath]
-      exports.delByFile(filePath)
+      delByFile(filePath)
     }
   }
   if (path.extname(filePath) !== '.js') return
+  FILE.path = filePath
   try {
-    FILE.path = filePath
     require(filePath)
-    jsFileDoc(filePath, exports.routes)
+    jsFileDoc(filePath, routes)
   } catch (err) {
     if (err.code === 'ENOENT') { //文件删除
-      delFileDoc(filePath)
       return
     }
     console.warn(`【js file】:  ${filePath} has error, please check！\n`, err)
@@ -202,4 +201,19 @@ exports.loadFileRoute = function (filePath, noCache = false) {
     FILE.path = null
     FILE.content = ''
   }
+}
+
+module.exports = {
+  routes,
+  match,
+  addRoute,
+  all,
+  get,
+  post,
+  put,
+  del,
+  loadFileRoute,
+  scanRoute,
+  handleRoute,
+  delByFile,
 }

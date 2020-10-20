@@ -10,7 +10,6 @@ const FileDoc = []
 // 解析文件成jsdoc
 async function jsFileDoc(filePath, routes = []) {
   if (!config.doc) return
-  delFileDoc(filePath)
   const fileRoutes = routes.filter(item => item.file && item.file === filePath)
   if (!fileRoutes.length) return
   return new Promise((resolve, reject) => {

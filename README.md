@@ -15,29 +15,33 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于nodejs的轻
   # 全局安装，只用安装一次
   npm i -g apite
 
-  # 在项目目录下执行命令，更多参数请见配置参数
-  apite --port=3000
-  ```
-  用浏览器打开控制台输出的地址即可查看api文档  [官网示例](https://apite.frp.boyxing.com/)
+  # 安装完成后，如果不想生成过多的文件，此时可以直接执行 apite 命令，不需要 apite init, 此操作不会初始化api的示例文件。
+  # 初始化项目
+  apite init
 
-- **独立使用**
+  # 启动命令 or 直接运行 apite
+  npm run apite 
+  ```
+  浏览器打开 [localhost:3000](http://localhost:3000/) 查看api文档
+
+- **独立项目使用**
   ```bash
-  # 全局安装，只用安装一次
+  # 安装依赖
   npm i -S apite
 
-  # 在package.json中添加启动命令
+  # package.json 添加命令
   {
     "scripts": {
       "apite": "apite --dir=api",
     }
   }
 
-  # 运行npm命令 或 直接运行 apite （全局安装apite）
+  # 启动命令 or 直接运行 apite （全局安装apite）
   npm run apite
   ```
   用浏览器打开控制台输出的地址即可查看api文档
 
-  *如果你已经全局安装了apite，可使用 apite init 快速完成以上的安装配置过程哦！*
+  > 如果你已经全局安装了apite，可使用 apite init 快速完成以上的安装配置过程哦！
 
 - **脚手架：vite**
   
@@ -73,8 +77,10 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于nodejs的轻
       before: webpackExt({ /**ExtConfig*/ })
     }
   }
+  
 
   ```
+  > devServer 配置需要在项目中使用 web-dev-server
 
 ## 配置参数
 
@@ -86,7 +92,7 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于nodejs的轻
       # eg
       apite --dir=mock --port=8080
       ```
-  2. 项目根目录配置文件 apite.config.js
+  2. 项目根目录配置文件 apite.config.js，优先级最高
   3. 插件函数中传入
 
   **所有支持的参数列表**
@@ -178,6 +184,12 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于nodejs的轻
     ```
 
   - 更多写法请参考 [官网示例](https://apite.frp.boyxing.com/)
+
+## 未来功能规划
+  - 在web页面可直接添加修改接口，并直接写入到文件
+  - 在线调试增加复制前后端代码的功能
+  - 路由添加 /{name}/{id} 和正由匹配
+  - 添加cookie的支持
     
 
 

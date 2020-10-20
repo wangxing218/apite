@@ -3,6 +3,7 @@ const fs = require('fs')
 const util = require('./util')
 const { config } = require('./config')
 const router = require('./router')
+const { delFileDoc } = require('./doc')
 
 
 // 兼听文件变化
@@ -14,6 +15,7 @@ function watchDir(dir) {
     const handleEvent = () => {
       handleChange(event, filePath)
     }
+    delFileDoc(filePath)
     delayHandle(handleEvent)
   })
 }
