@@ -18,18 +18,22 @@ function webpackExt(options = {}) {
 }
 
 // 插件执行
-function handleApp(app, server, compiler) {
+function handleApp(app, server) {
+  // app为express实例
+  app.all(config.prefix + '/*', apite.handle)
+
+  // react项目中如果使用 /src/setupProxy.js，则不存在sever参数
+  if (!server) return
   let done = false
-  compiler.hooks.done.tap('apite-server-start', () => {
-    if(done) return
+  server.compiler.hooks.done.tap('apite-server-start', () => {
+    if (done) return
     done = true
-    const port = server.options.port
+    const port = server.options.port || 8080
     setConfig({
       port,
     })
     util.startLog()
   })
-  app.all(config.prefix + '/*', apite.handle)
 }
 
 module.exports = webpackExt

@@ -77,9 +77,16 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于nodejs的轻
       before: webpackExt({ /**ExtConfig*/ })
     }
   }
-  
-
   ```
+  > 使用create-react-app创建的react项目，可以使用下面的配置
+  ```js
+  // 新建 /src/setupProxy.js，并写入
+  const { webpackExt } = require('apite')
+  
+  module.exports = webpackExt({ /**ExtConfig*/ })
+  ```
+
+  > react项目中如果不存在 webpack 配置文件，可以使用 npm run eject 释放  
   > devServer 配置需要在项目中使用 web-dev-server
 
 ## 配置参数
