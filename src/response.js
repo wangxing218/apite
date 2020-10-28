@@ -4,6 +4,7 @@ const mime = require('../lib/mime')
 const Mock = require('../lib/mock')
 const { config } = require('./config')
 const { isObj, appDir } = require('./util')
+const cookie = require('./cookie')
 
 // 处理输出
 async function handleBody(ctx) {
@@ -53,6 +54,7 @@ function isIE(ctx) {
 // 响应头
 async function respHeaders(ctx) {
   let contentType = mime.contentType(ctx.type)
+  cookie.respCookie(ctx)
   if (ctx.file) {
     contentType = ctx.status === 404 ? null : mime.contentType(path.extname(ctx.file))
   } else if (!ctx.type && isObj(ctx.body)) {

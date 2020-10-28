@@ -4,7 +4,7 @@
       <div class="tiny-btn left" @click="showMenu = !showMenu">目录</div>
     </div>
     <div class="side" :class="{show: showMenu}">
-      <h2 class="logo" @click="scrollTop">APITE DOC</h2>
+      <h1 class="logo" @click="scrollTop">APITE <span v-if="info.version" class="version">v {{info.version}}</span> </h1>
       <ul class="nav">
         <li v-for="item in data" :key="item.file">
           <div class="title" :class="{close: item.close}" @click="item.close = !item.close">{{ item.name }}</div>
@@ -117,6 +117,21 @@
   font-size: 28px;
   padding: 10px 0;
   color: #4fc08d;
+  position: relative;
+  .version{
+    position: absolute;
+    right: 0;
+    top: 20px;
+    background-color:#f1f4f8;
+    color: #999;
+    height: 16px;
+    line-height: 16px;
+    font-size: 12px;
+    font-weight: 100;
+    display: inline-block;
+    padding: 0 5px;
+    border-radius: 4px;
+  }
 }
 .nav {
   line-height: 28px;

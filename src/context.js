@@ -7,6 +7,8 @@ class context {
     this.method = req.method
     this.header = {}
     this.query = {}
+    this.cookie = {}
+    this.params = {}
     this.post = {}
     this.status = 200
     this.type = ''
@@ -14,6 +16,7 @@ class context {
     this.path = ''
     this.url = ''
     this.file = null
+    this._cookieArr = []
   }
 
   json(body) {
@@ -47,6 +50,13 @@ class context {
     this.type = 'svg'
     this.body = captcha.data
     return captcha
+  }
+  setCookie(name, value, options){
+    this._cookieArr.push({
+      name,
+      value,
+      options
+    })
   }
 }
 

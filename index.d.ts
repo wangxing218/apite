@@ -16,11 +16,20 @@ interface ApiteTypes {
     width?: number
     height?: number
   }
+  cookieOptions:{
+    path?: string
+    maxAge: number
+    domain: string
+    httpOnly: boolean
+    secure: boolean
+  }
 }
 interface Context {
   method?: string
   header?: object
+  cookie?: object
   query?: object
+  params?: object
   post?: object
   status?: number
   type?: string
@@ -32,6 +41,7 @@ interface Context {
   jsonp :(body : object) => void
   html: (html : string) => void
   error :(code: number, body: string) => void
+  setCookie :(name: string, value: string, options: ApiteTypes['cookieOptions']) => void
   captcha: (options: ApiteTypes['captchaOptions']) => {data: Buffer, text: code}
 }
 

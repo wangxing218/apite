@@ -48,6 +48,7 @@ async function docRouter() {
       msg: 'ok',
       result: {
         info: {
+          version: require('../package.json').version,
           desc,
           title: config.docTitle,
           prefix: config.prefix,

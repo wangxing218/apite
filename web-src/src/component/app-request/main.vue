@@ -358,9 +358,11 @@ export default defineComponent({
 
     // 发送ajax请求
     function handlePost() {
+      const router = props.router
       let data = {}
       let headers = {}
-
+      let url = router.url
+      // 请求数据 
       if (state.req.tab === 1) {
         state.req.params.forEach((item) => {
           data[item.name] = item.value
@@ -368,16 +370,31 @@ export default defineComponent({
       }else if (state.req.tab === 3 && props.router.method !== 'GET') {
         data = strToJson(state.req.body)
       }
+      // url参数替换
+      if(url.indexOf('{') + 1){
+        url = url.replace(/{([^/]+)}/g,(a,key)=>{
+          const value = data[key]
+          if(value !== undefined){
+            delete data[key]
+            return encodeURIComponent(value)
+          }
+          return '' 
+        })
+      }
+      // 通配符替换
+      if(url.indexOf('*') === url.length - 1){
+        url = url.replace(/\*+$/, '')
+      }
 
+      // 头
       state.req.headers.map((item) => {
         if (!item.name) return
         headers[item.name] = item.value
       })
-      const router = props.router
       nprogress.start()
       nprogress.inc(0.6)
       ajax({
-        url: router.url,
+        url: url,
         method: router.method,
         headers,
         params: router.method !== 'POST' ? data : undefined,

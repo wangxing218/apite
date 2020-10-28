@@ -195,9 +195,14 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于nodejs的轻
 ## 未来功能规划
   - 在web页面可直接添加修改接口，并直接写入到文件
   - 在线调试增加复制前后端代码的功能
-  - 路由添加 /{name}/{id} 和正由匹配
-  - 添加cookie的支持
     
+## 版本更新
+
+### v1.1.3 
+- 支持cookie，ctx.cookie.name 获取，ctx.setCookie() 设置
+- 支持路由参数，如 /user/{id}.html，ctx.params.id 获取
+- 文档页添加版本号
+
 
 
 

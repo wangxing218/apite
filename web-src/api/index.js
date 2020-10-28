@@ -10,7 +10,6 @@ api.get('/json', {
   msg: 'json'
 })
 
-
 /**
  * @name 模拟数据
  * 更多语法请参考 <a href="http://mockjs.com/examples.html" target="_blank">mockjs</a>
@@ -64,6 +63,30 @@ api.put('/put', ctx => {
  */
 api.del('/del', ctx => {
   ctx.body = ctx.query
+})
+
+/**
+ * url参数
+ * @param {number} id 用户id
+ * @param {string} name 用户名
+ */
+api.get('/user/{id}/{name}', ctx => {
+  ctx.body = ctx.params
+})
+
+// 获取cookie
+api.get('/cookie', ctx => {
+  return ctx.cookie
+})
+
+// 设置cookie
+api.get('/set-cookie', ctx => {
+  ctx.setCookie('user', mock('@name'))
+  ctx.setCookie('time', new Date(), {
+    maxAge: 15,
+    httpOnly: true
+  })
+  return resp.ok(ctx.cookie)
 })
 
 /**

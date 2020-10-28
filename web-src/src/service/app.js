@@ -28,6 +28,7 @@ export default defineComponent({
       state.info = {
         title: result.info.title,
         desc: result.info.desc,
+        version: result.info.version,
       }
       state.data = renderData(result)
     }

@@ -113,11 +113,15 @@ function del(url, handle, options) {
 // 匹配路由, 只匹配第一条就结束
 function match(pathname) {
   let matchRoute = null
+  let paramsArr = []
+  let params = {}
   routes.every(item => {
+    // 完全相等
     if (item.url === pathname) {
       matchRoute = item
       return false
     }
+    // 通配路径
     if (item.url.endsWith('*')) {
       const mUrl = item.url.replace(/\*+$/, '')
       if (pathname.startsWith(mUrl)) {
@@ -125,14 +129,40 @@ function match(pathname) {
         return false
       }
     }
+    // 带params参数
+    if (item.url.indexOf('{') > -1) {
+      const reg = new RegExp('^' + item.url.replace(/{([^/]+)}/g, (a,key)=>{
+        paramsArr.push({
+          key
+        })
+        return '([^/]+)'
+      }) + '$', 'g')
+      const resArr = reg.exec(pathname)
+      if(resArr && resArr.length === paramsArr.length + 1){
+        resArr.forEach((value,index)=>{
+          if(index < 1) return
+          paramsArr[index - 1].value = decodeURIComponent(value)
+        })
+        matchRoute = item
+        return false
+      }else {
+        paramsArr = []
+      }
+    }
     return true
   })
-  return matchRoute
+  if(paramsArr){
+    paramsArr.map(item=>{
+      params[item.key] = item.value
+    })
+  }
+  return {matchRoute, params}
 }
 
 // 路由处理
 async function handleRoute(ctx) {
-  const matchRoute = match(ctx.path)
+  const {matchRoute, params} = match(ctx.path)
+  ctx.params = params
   if (!matchRoute || matchRoute.handle === undefined || matchRoute.handle === null) {
     ctx.error()
     return
