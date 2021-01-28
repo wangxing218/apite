@@ -10,7 +10,7 @@ const static = require('./static')
 const context = require('./context')
 const docRouter = require('./doc-router')
 
-// 处理请求
+// 处理请求 - 后续考虑使用koa的洋葱模型实现
 async function handle(req, res) {
   const ctx = new context(req, res)
   await cookie.parseCookie(ctx)

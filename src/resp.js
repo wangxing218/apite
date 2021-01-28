@@ -1,16 +1,17 @@
+const { config } = require('./config')
 /**
  * 统一规范返回json
  * @param {*} { code, msg, result } 
  * @param {*} ext 扩展参数
  */
-function info({code, msg , result }, ext = {}) {
+function info({ code, msg, result }, ext = {}) {
   const res = {
     ...ext,
-    code,
-    msg,
   }
+  res[config.resp.code[0]] = code
+  res[config.resp.msg[0]] = msg
   if (result !== undefined) {
-    res.result = result
+    res[config.resp.result[0]] = result
   }
   return res
 }
@@ -22,8 +23,8 @@ function info({code, msg , result }, ext = {}) {
  */
 function ok(result, ext) {
   return info({
-    code: 0,
-    msg: 'ok',
+    code: config.resp.code[1] || 0,
+    msg: config.resp.msg[1] || 'ok',
     result,
   }, ext)
 }
@@ -33,7 +34,7 @@ function ok(result, ext) {
  * @param {*} result 成功结果
  * @param {*} ext 扩展参数
  */
-function mock(result, ext){
+function mock(result, ext) {
   const Mock = require('../lib/mock')
   return ok(Mock.mock(result), ext)
 }
@@ -44,7 +45,7 @@ function mock(result, ext){
  * @param {*} code 错误码，默认400
  * @param {*} ext 扩展参数
  */
-function fail(msg = 'fail', code = 400, ext = {}) {
+function fail(msg = config.resp.fail[0], code = config.resp.fail[1], ext = {}) {
   return info({
     code,
     msg,
@@ -57,10 +58,12 @@ function fail(msg = 'fail', code = 400, ext = {}) {
  * @param {*} total 总数
  * @param {*} ext 扩展
  */
-function list(result = [], total = 0, ext = {}) {
-  return ok(result, {
-    total
-  })
+function list(result = [], total = config.resp.total[1], ext = {}) {
+  const res = {
+    ...ext
+  }
+  res[config.resp.total[0]] = total
+  return ok(result, res)
 }
 
 module.exports = {

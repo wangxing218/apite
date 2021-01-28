@@ -1,4 +1,4 @@
-
+const { extend } = require('./helper')
 // apite默认配置
 const config = {
   // 服务端口
@@ -33,14 +33,20 @@ const config = {
   docTitle: '',
   // 文档描述，文本或markdown文档地址，相对于根目录
   docDesc: '',
+  // 公共返回格式定义
+  resp: {
+    code: ['code', 0], // 成功字段，默认返回码 
+    fail: ['fail', 400], // 失败信息，默认返回码
+    msg: ['msg', 'ok'], // 信息字段，默认值 
+    result: ['result'], // 结果字段
+    total: ['total', 0] // 列表总数字段，默认值
+  },
 }
 
 // 覆盖配置
+
 function setConfig(options = {}) {
-  Object.keys(options).map(key => {
-    if (!config.hasOwnProperty(key)) return
-    config[key] = options[key]
-  })
+  extend(config, options)
 }
 module.exports = {
   config,

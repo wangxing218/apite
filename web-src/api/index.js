@@ -43,7 +43,10 @@ api.get('/mock-time', ctx => {
  * @param {boolean} [online=true] 是否在线
  */
 api.post('/post', ctx => {
-  ctx.body = ctx.post
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
 })
 
 
@@ -53,7 +56,10 @@ api.post('/post', ctx => {
  * @param {number} id ID
  */
 api.put('/put', ctx => {
-  ctx.body = ctx.query
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
 })
 
 /**
@@ -62,7 +68,10 @@ api.put('/put', ctx => {
  * @param {number} id ID
  */
 api.del('/del', ctx => {
-  ctx.body = ctx.query
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
 })
 
 /**
@@ -70,8 +79,11 @@ api.del('/del', ctx => {
  * @param {number} id 用户id
  * @param {string} name 用户名
  */
-api.get('/user/{id}/{name}', ctx => {
-  ctx.body = ctx.params
+api.post('/user/{id}/{name}', ctx => {
+  ctx.body = {
+    params: ctx.params,
+    post: ctx.post,
+  }
 })
 
 // 获取cookie
@@ -92,24 +104,31 @@ api.get('/set-cookie', ctx => {
 /**
  * @name 统一返回成功
  * resp.ok(data, ext) 返回成功
- * resp.fail(msg, code, ext) 返回成功
+ * resp.fail(msg, code, ext) 返回失败
  * resp.mock(data, ext) 返回成功并mock
+ * resp.list(list, total, ext) 返回列表
+ * 返回格式可按要求在config里定制
+ * 
  */
 api.get('/resp/ok', resp.ok('添加成功'))
 
 /**
  * @name 统一返回失败
  * resp.ok(data, ext) 返回成功
- * resp.fail(msg, code, ext) 返回成功
+ * resp.fail(msg, code, ext) 返回失败
  * resp.mock(data, ext) 返回成功并mock
+ * resp.list(list, total, ext) 返回列表
+ * 返回格式可按要求在config里定制
  */
 api.get('/resp/fail', resp.fail('失败了'))
 
 /**
- * @name 返回成功并mock
+ * @name 统一返回mock
  * resp.ok(data, ext) 返回成功
- * resp.fail(msg, code, ext) 返回成功
+ * resp.fail(msg, code, ext) 返回失败
  * resp.mock(data, ext) 返回成功并mock
+ * resp.list(list, total, ext) 返回列表
+ * 返回格式可按要求在config里定制
  */
 api.get('/resp/mock', () => resp.mock({
   'data|10': [{
@@ -120,6 +139,26 @@ api.get('/resp/mock', () => resp.mock({
   }],
   'total|90-1000': 10
 }))
+
+/**
+ * @name 统一返回列表
+ * resp.ok(data, ext) 返回成功
+ * resp.fail(msg, code, ext) 返回失败
+ * resp.mock(data, ext) 返回成功并mock
+ * resp.list(list, total, ext) 返回列表
+ * 返回格式可按要求在config里定制
+ */
+api.get('/resp/list', ctx => {
+  const data = mock({
+    'list|10': [{
+      id: '@id',
+      name: '@cname',
+      title: '@title',
+      email: '@email'
+    }]
+  })
+  ctx.body = resp.list(data.list, 98)
+})
 
 // JSONP
 api.get('/jsonp', ctx => {

@@ -138,6 +138,14 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于nodejs的轻
       docTitle: '',
       // 文档描述，文本或markdown文档地址，相对于根目录
       docDesc: '',
+      // 公共返回格式定义
+      resp: {
+        code: ['code', 0], // 成功字段，默认返回码 
+        fail: ['fail', 400], // 失败信息，默认返回码
+        msg: ['msg', 'ok'], // 信息字段，默认值 
+        result: ['result'], // 结果字段
+        total: ['total', 0] // 列表总数字段，默认值
+      },
     }
   ```
 
@@ -195,8 +203,15 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于nodejs的轻
 ## 未来功能规划
   - 在web页面可直接添加修改接口，并直接写入到文件
   - 在线调试增加复制前后端代码的功能
+  - 源码中的web服务考虑使用用koa的洋葱模型实现
     
 ## 版本更新
+
+### v1.2.0 
+- 在线调试支持get,post参数同时提交
+- 除get请求外，其他类型请求默认定位到请求体tab
+- 调试重置小图标更换
+- resp公共返回类支持格式定义
 
 ### v1.1.3 
 - 支持cookie，ctx.cookie.name 获取，ctx.setCookie() 设置

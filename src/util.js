@@ -77,12 +77,12 @@ exports.parseCMD = function (target = {}) {
     }
     res[key] = val
   })
-  
+
   return res
 }
 
 // 绑定端口
-exports.bindPort =function(port, server) {
+exports.bindPort = function (port, server) {
   this.port = this.port || port
   return new Promise((resolve, reject) => {
     server.listen(this.port, '0.0.0.0')

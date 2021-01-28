@@ -8,5 +8,13 @@ export default {
       'marked/lib/marked.esm'
     ]
   },
-  configureServer: [viteExt()]
+  configureServer: [viteExt({
+    resp:{
+      // code: ['errCode', '000000'],
+      // msg: ['message', '成功'],
+      // fail: ['失败了', '999999'],
+      // result: ['data'],
+      // total: ['count']
+    }
+  })]
 }

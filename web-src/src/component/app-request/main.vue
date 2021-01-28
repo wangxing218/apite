@@ -48,7 +48,7 @@
           <i class="ui-icon">&#xe623;</i>
         </div>
         <div class="tiny-btn none" title="重置" @click="handleReset">
-          <i class="ui-icon">&#xe65c;</i>
+          <i class="ui-icon">&#xe61b;</i>
         </div>
         <div class="action-right">
           <div class="tiny-btn left" @click="handlePost">发送</div>
@@ -291,6 +291,8 @@ export default defineComponent({
         headers: [],
         body: '',
         params: [],
+        isParamsUrl: false,
+        isGet: true,
       },
       resp: {
         tab: 1,
@@ -309,10 +311,15 @@ export default defineComponent({
       if (!router.doc) return
       if (!router.doc.params) return
       const fmtBody = formatBody()
-      console.log(fmtBody.arr)
-      state.req.params = fmtBody.arr
-      if (router.method === 'POST') {
-        state.req.body = parseJson(fmtBody.res)
+      state.req.isParamsUrl = !!/{\w+}/i.test(router.url)
+      state.req.isGet = router.method === 'GET'
+      if (state.req.isParamsUrl || state.req.isGet) {
+        state.req.params = fmtBody.arr
+        if (!state.req.isGet) {
+          state.req.body = '{}'
+        }
+      } else {
+        state.req.body = state.req.isParamsUrl ? '{}' : parseJson(fmtBody.res)
         state.req.tab = 3
       }
     }
@@ -327,22 +334,28 @@ export default defineComponent({
     }
     // 点击添加
     function handleAdd() {
-      if (state.req.tab == 1) {
-        state.req.params.push({
-          name: 'key' + (state.req.params.length + 1),
-          value: '',
-        })
-      } else if (state.req.tab == 2) {
-        state.req.headers.push({
-          name: 'Header-Key' + (state.req.headers.length + 1),
-          value: '',
-        })
-      } else if (state.req.tab == 3) {
-        if (props.router.method !== 'POST') return
-        const bodyTemp = strToJson(state.req.body)
-        const keyLen = Object.keys(bodyTemp).length || 0
-        bodyTemp['key' + (keyLen + 1)] = ''
-        state.req.body = parseJson(bodyTemp)
+      switch (state.req.tab) {
+        case 1:
+          state.req.params.push({
+            name: 'key' + (state.req.params.length + 1),
+            value: '',
+          })
+          break
+        case 2:
+          state.req.headers.push({
+            name: 'Header-Key' + (state.req.headers.length + 1),
+            value: '',
+          })
+          break
+        case 3:
+          if (state.req.isGet) return
+          const bodyTemp = strToJson(state.req.body)
+          const keyLen = Object.keys(bodyTemp).length || 0
+          bodyTemp['key' + (keyLen + 1)] = ''
+          state.req.body = parseJson(bodyTemp)
+          break
+        default:
+          break
       }
     }
 
@@ -359,30 +372,32 @@ export default defineComponent({
     // 发送ajax请求
     function handlePost() {
       const router = props.router
+      let params = {}
       let data = {}
       let headers = {}
       let url = router.url
-      // 请求数据 
-      if (state.req.tab === 1) {
+      // 请求数据
+      if (state.req.params.length) {
         state.req.params.forEach((item) => {
-          data[item.name] = item.value
+          params[item.name] = item.value
         })
-      }else if (state.req.tab === 3 && props.router.method !== 'GET') {
+      }
+      if (!state.req.isGet) {
         data = strToJson(state.req.body)
       }
       // url参数替换
-      if(url.indexOf('{') + 1){
-        url = url.replace(/{([^/]+)}/g,(a,key)=>{
-          const value = data[key]
-          if(value !== undefined){
-            delete data[key]
+      if (state.req.isParamsUrl) {
+        url = url.replace(/{(\w+)}/gi, (a, key) => {
+          const value = params[key]
+          if (value !== undefined) {
+            delete params[key]
             return encodeURIComponent(value)
           }
-          return '' 
+          return ''
         })
       }
       // 通配符替换
-      if(url.indexOf('*') === url.length - 1){
+      if (url.indexOf('*') === url.length - 1) {
         url = url.replace(/\*+$/, '')
       }
 
@@ -397,12 +412,11 @@ export default defineComponent({
         url: url,
         method: router.method,
         headers,
-        params: router.method !== 'POST' ? data : undefined,
-        data: router.method === 'POST' ? data : undefined,
+        params,
+        data: state.req.isGet ? undefined  : data,
       })
         .then(parseBody)
         .catch((err) => {
-          console.log('err', err)
           state.resp.type = 'text'
           state.resp.body = err
         })
