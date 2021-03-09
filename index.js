@@ -5,6 +5,7 @@ const Mock = require('./lib/mock')
 const util = require('./src/util')
 const webpackExt = require('./src/webpack-ext')
 const viteExt = require('./src/vite-ext')
+const vite2Ext = require('./src/vite2-ext')
 
 
 exports.api = {
@@ -17,5 +18,6 @@ exports.api = {
 exports.delay = util.delay
 exports.webpackExt = webpackExt
 exports.viteExt = viteExt
+exports.vite2Ext = vite2Ext
 exports.mock = Mock.mock
 exports.resp = resp

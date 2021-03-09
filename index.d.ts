@@ -122,4 +122,5 @@ declare module 'apite' {
   function mock(mockObj: any): any
   function webpackExt(options: ExtOptions): Function
   function viteExt(options: ExtOptions): Function
+  function vite2Ext(options: ExtOptions): Function
 }

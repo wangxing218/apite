@@ -58,6 +58,13 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于nodejs的轻
     // other config
     configureServer: [ viteExt({ /**ExtConfig*/ }) ]
   }
+  // vite2.0
+  import { vite2Ext } from 'apite'
+  export default {
+    plugins: [
+      vite2Ext({ /**ExtConfig*/ })
+    ]
+  }
   ```
 
 - **脚手架：webpack, react, vue**
@@ -206,6 +213,9 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于nodejs的轻
   - 源码中的web服务考虑使用用koa的洋葱模型实现
     
 ## 版本更新
+
+### v1.2.1 
+- 增加对vite2.x支持
 
 ### v1.2.0 
 - 在线调试支持get,post参数同时提交
