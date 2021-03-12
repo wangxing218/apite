@@ -214,6 +214,9 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于nodejs的轻
     
 ## 版本更新
 
+### v1.2.2
+- 解决在vite2下执行vite build控制台无法退出的问题
+
 ### v1.2.1 
 - 增加对vite2.x支持
 

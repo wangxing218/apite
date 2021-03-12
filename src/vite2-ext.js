@@ -16,7 +16,18 @@ function vite2Ext(options = {}) {
   })
   return {
     name: 'vite-plugin-apite',
+    configResolved(resolvedConfig) {
+      isBuild = resolvedConfig.command == 'build'
+    },
     configureServer(server) {
+      const initOptions = {
+        ...defaultOpt,
+        ...options,
+      }
+      if (isBuild) {
+        initOptions.watchDelay = 0
+      }
+      apite.init(initOptions)
       handleApp(server)
     }
   }
