@@ -10,24 +10,14 @@ const defaultOpt = {
 
 // 插件入口
 function vite2Ext(options = {}) {
-  apite.init({
-    ...defaultOpt,
-    ...options
-  })
   return {
     name: 'vite-plugin-apite',
-    configResolved(resolvedConfig) {
-      isBuild = resolvedConfig.command == 'build'
-    },
+    apply: 'serve',
     configureServer(server) {
-      const initOptions = {
+      apite.init({
         ...defaultOpt,
-        ...options,
-      }
-      if (isBuild) {
-        initOptions.watchDelay = 0
-      }
-      apite.init(initOptions)
+        ...options
+      })
       handleApp(server)
     }
   }
