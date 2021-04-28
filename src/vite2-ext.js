@@ -29,7 +29,7 @@ function handleApp(server) {
     setConfig({
       port,
     })
-    util.startLog()
+    setTimeout(()=>util.startLog(), 300)
   })
   server.middlewares.use((req, res, next) => {
     if (!req.url.startsWith(config.prefix)) {

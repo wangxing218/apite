@@ -32,7 +32,7 @@ function handleApp(app, server) {
     setConfig({
       port,
     })
-    util.startLog()
+    setTimeout(()=>util.startLog(), 300)
   })
 }
 

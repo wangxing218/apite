@@ -45,10 +45,10 @@
       </div>
       <div class="action">
         <div class="tiny-btn none" title="添加参数" @click="handleAdd">
-          <i class="ui-icon">&#xe623;</i>
+          <span class="tiny-icon ti-add"></span>
         </div>
         <div class="tiny-btn none" title="重置" @click="handleReset">
-          <i class="ui-icon">&#xe61b;</i>
+          <span class="tiny-icon ti-refresh"></span>
         </div>
         <div class="action-right">
           <div class="tiny-btn left" @click="handlePost">发送</div>
@@ -263,6 +263,15 @@ $min-height: 240px;
     max-width: 100%;
   }
 }
+.tiny-icon {
+  font-family: 'ui-icon';
+}
+.ti-add:before {
+  content: '\e623';
+}
+.ti-refresh:before {
+  content: '\e61b';
+}
 </style>
 
 <script>
@@ -413,7 +422,7 @@ export default defineComponent({
         method: router.method,
         headers,
         params,
-        data: state.req.isGet ? undefined  : data,
+        data: state.req.isGet ? undefined : data,
       })
         .then(parseBody)
         .catch((err) => {

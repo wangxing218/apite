@@ -62,7 +62,7 @@ function matchDoc(content = '', routes, filePath) {
     }
 
     // 多行注释分步解析
-    const multiReg = new RegExp(`\\/\\*+[\\r\\n]+(\\s*\\*(.*?)[\\r\\n]*)*[\\r\\n\\s]+\\s*api\\.${method}\\(\\s*['"]${router.url}`)
+    const multiReg = new RegExp(`\\/\\*+[\\r\\n]+([\\s\\t]?\\*(.*?)[\\r\\n]*)+[\\r\\n\\s]+api\\.${method}\\(['"]${router.url}`)
     const multiRes = content.match(multiReg)
     if (multiRes && multiRes[0]) {
       router.doc = docTool.parseDoc(multiRes[0]) || {}

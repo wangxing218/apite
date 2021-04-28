@@ -29,7 +29,7 @@ function handleApp({
     setConfig({
       port,
     })
-    util.startLog()
+    setTimeout(()=>util.startLog(), 300)
   })
   app.use(async (ctx, next) => {
     if (!ctx.path.startsWith(config.prefix)) {
