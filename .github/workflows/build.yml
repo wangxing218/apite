@@ -1,0 +1,32 @@
+name: 构建发布
+
+on:
+  workflow_dispatch:
+    inputs:
+      mark:
+        description: 发布说明
+        required: true
+        default: ''
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: 构建发布
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - run: |
+          echo "发布说明: ${{ github.event.inputs.mark }}"
+      - run: |
+          cd web-src
+          npm install
+          npm run build
+          cd ..
+          npm publish

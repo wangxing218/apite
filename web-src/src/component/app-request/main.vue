@@ -8,36 +8,16 @@
       </ul>
       <ul class="form" v-show="req.tab == 1">
         <li v-for="(item, index) in req.params" :key="index">
-          <input
-            v-model="item.name"
-            type="text"
-            class="input key"
-            placeholder="key"
-          />
+          <input v-model="item.name" type="text" class="input key" placeholder="key" />
           <span class="del" title="删除" @click="handleDel(index)">+</span>
-          <input
-            v-model="item.value"
-            type="text"
-            class="input"
-            placeholder="value"
-          />
+          <input v-model="item.value" type="text" class="input" placeholder="value" />
         </li>
       </ul>
       <ul class="form" v-show="req.tab == 2">
         <li v-for="(item, index) in req.headers" :key="index">
-          <input
-            type="text"
-            v-model="item.name"
-            class="input hkey"
-            placeholder="key"
-          />
+          <input type="text" v-model="item.name" class="input hkey" placeholder="key" />
           <span class="del" title="删除" @click="handleDel(index)">+</span>
-          <input
-            type="text"
-            v-model="item.value"
-            class="input"
-            placeholder="value"
-          />
+          <input type="text" v-model="item.value" class="input" placeholder="value" />
         </li>
       </ul>
       <div class="text-area" v-show="req.tab == 3">
@@ -70,7 +50,8 @@
       </div>
       <ul class="form resp-con" v-show="resp.tab == 2">
         <li v-for="(val, key) in resp.headers" :key="key">
-          <b>{{ transformCase(key) }}:</b> {{ val }}
+          <b>{{ transformCase(key) }}:</b>
+          {{ val }}
         </li>
       </ul>
     </div>
@@ -275,11 +256,10 @@ $min-height: 240px;
 </style>
 
 <script>
-import { defineComponent, onMounted, reactive, toRefs, watchEffect } from 'vue'
+import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import axios from 'axios'
 import nprogress from 'nprogress'
 import { getBaseUrl } from '../../service/common'
-import Toast from '../app-toast'
 
 const ajax = axios.create({
   baseURL: getBaseUrl(),
@@ -445,8 +425,7 @@ export default defineComponent({
           value = isNaN(value) ? 0 : value
         } else if (['boolean', 'bool'].includes(type)) {
           value = item.value === undefined ? item.default : item.value
-          value =
-            value === 'false' || value === '0' || value === '' ? false : true
+          value = value === 'false' || value === '0' || value === '' ? false : true
         }
         arr.push({
           ...item,
@@ -467,12 +446,10 @@ export default defineComponent({
       if (contentType.indexOf('image/') === 0) {
         state.resp.type = 'image'
         const searchChar = resp.request.responseURL.indexOf('?') + 1 ? '&' : '?'
-        state.resp.body =
-          resp.request.responseURL + searchChar + '_r=' + Date.now()
+        state.resp.body = resp.request.responseURL + searchChar + '_r=' + Date.now()
         return
       }
-      state.resp.body =
-        typeof resp.data == 'string' ? resp.data : parseJson(resp.data)
+      state.resp.body = typeof resp.data == 'string' ? resp.data : parseJson(resp.data)
       state.resp.type = 'text'
     }
 
@@ -494,9 +471,7 @@ export default defineComponent({
 
     // 大小写转换
     function transformCase(str = '') {
-      return str
-        .replace(/[a-z]/, (a) => a.toUpperCase())
-        .replace(/\-[a-z]/g, (a) => a.toUpperCase())
+      return str.replace(/[a-z]/, (a) => a.toUpperCase()).replace(/\-[a-z]/g, (a) => a.toUpperCase())
     }
 
     return {

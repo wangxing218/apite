@@ -1,20 +1,18 @@
-import { viteExt } from 'apite'
-export default {
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+import { vite2Ext } from 'apite'
+
+export default defineConfig({
   base: './',
-  outDir: '../web',
-  assetsDir: '_doc_static',
-  optimizeDeps: {
-    include: [
-      'marked/lib/marked.esm'
-    ]
+  build: {
+    assetsDir: '_doc_static',
+    outDir: '../web',
+    emptyOutDir: true,
   },
-  configureServer: [viteExt({
-    resp:{
-      // code: ['errCode', '000000'],
-      // msg: ['message', '成功'],
-      // fail: ['失败了', '999999'],
-      // result: ['data'],
-      // total: ['count']
-    }
-  })]
-}
+  plugins: [
+    vue(),
+    // mock
+    vite2Ext({}),
+  ],
+})

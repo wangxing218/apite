@@ -7,33 +7,36 @@ const { api, delay, mock, resp } = require('apite')
 
 // JSON
 api.get('/json', {
-  msg: 'json'
+  msg: 'json',
 })
 
 /**
  * @name 模拟数据
  * 更多语法请参考 <a href="http://mockjs.com/examples.html" target="_blank">mockjs</a>
  */
-api.get('/mock', mock({
-  id: '@id',
-  number: '@int(5,9)',
-  name: '@name',
-  cname: '@cname',
-  date: '@dateTime',
-  reg: /\w{10}/
-}))
-
-// 实时模拟
-api.get('/mock-time', ctx => {
-  return mock({
+api.get(
+  '/mock',
+  mock({
     id: '@id',
     number: '@int(5,9)',
     name: '@name',
     cname: '@cname',
     date: '@dateTime',
-    reg: /\w{10}/
-  })
-})
+    reg: /\w{10}/,
+  }),
+)
+
+// 实时模拟
+api.get('/mock-time', () =>
+  mock({
+    id: '@id',
+    number: '@int(5,9)',
+    name: '@name',
+    cname: '@cname',
+    date: '@dateTime',
+    reg: /\w{10}/,
+  }),
+)
 
 /**
  * @name POST请求
@@ -42,20 +45,19 @@ api.get('/mock-time', ctx => {
  * @param {number} [age=10] 年龄
  * @param {boolean} [online=true] 是否在线
  */
-api.post('/post', ctx => {
+api.post('/post', (ctx) => {
   ctx.body = {
     query: ctx.query,
     post: ctx.post,
   }
 })
 
-
 /**
  * @name PUT请求
  * 点击在线调试传参数请求看看
  * @param {number} id ID
  */
-api.put('/put', ctx => {
+api.put('/put', (ctx) => {
   ctx.body = {
     query: ctx.query,
     post: ctx.post,
@@ -67,7 +69,7 @@ api.put('/put', ctx => {
  * 点击在线调试传参数请求看看
  * @param {number} id ID
  */
-api.del('/del', ctx => {
+api.del('/del', (ctx) => {
   ctx.body = {
     query: ctx.query,
     post: ctx.post,
@@ -79,7 +81,7 @@ api.del('/del', ctx => {
  * @param {number} id 用户id
  * @param {string} name 用户名
  */
-api.post('/user/{id}/{name}', ctx => {
+api.post('/user/{id}/{name}', (ctx) => {
   ctx.body = {
     params: ctx.params,
     post: ctx.post,
@@ -87,16 +89,16 @@ api.post('/user/{id}/{name}', ctx => {
 })
 
 // 获取cookie
-api.get('/cookie', ctx => {
+api.get('/cookie', (ctx) => {
   return ctx.cookie
 })
 
 // 设置cookie
-api.get('/set-cookie', ctx => {
+api.get('/set-cookie', (ctx) => {
   ctx.setCookie('user', mock('@name'))
   ctx.setCookie('time', new Date(), {
     maxAge: 15,
-    httpOnly: true
+    httpOnly: true,
   })
   return resp.ok(ctx.cookie)
 })
@@ -108,7 +110,7 @@ api.get('/set-cookie', ctx => {
  * resp.mock(data, ext) 返回成功并mock
  * resp.list(list, total, ext) 返回列表
  * 返回格式可按要求在config里定制
- * 
+ *
  */
 api.get('/resp/ok', resp.ok('添加成功'))
 
@@ -130,15 +132,19 @@ api.get('/resp/fail', resp.fail('失败了'))
  * resp.list(list, total, ext) 返回列表
  * 返回格式可按要求在config里定制
  */
-api.get('/resp/mock', () => resp.mock({
-  'data|10': [{
-    id: '@id',
-    name: '@cname',
-    title: '@title',
-    email: '@email'
-  }],
-  'total|90-1000': 10
-}))
+api.get('/resp/mock', () =>
+  resp.mock({
+    'data|10': [
+      {
+        id: '@id',
+        name: '@cname',
+        title: '@title',
+        email: '@email',
+      },
+    ],
+    'total|90-1000': 10,
+  }),
+)
 
 /**
  * @name 统一返回列表
@@ -148,22 +154,24 @@ api.get('/resp/mock', () => resp.mock({
  * resp.list(list, total, ext) 返回列表
  * 返回格式可按要求在config里定制
  */
-api.get('/resp/list', ctx => {
+api.get('/resp/list', (ctx) => {
   const data = mock({
-    'list|10': [{
-      id: '@id',
-      name: '@cname',
-      title: '@title',
-      email: '@email'
-    }]
+    'list|10': [
+      {
+        id: '@id',
+        name: '@cname',
+        title: '@title',
+        email: '@email',
+      },
+    ],
   })
   ctx.body = resp.list(data.list, 98)
 })
 
 // JSONP
-api.get('/jsonp', ctx => {
+api.get('/jsonp', (ctx) => {
   ctx.jsonp({
-    msg: 'jsonp'
+    msg: 'jsonp',
   })
 })
 
@@ -171,25 +179,25 @@ api.get('/jsonp', ctx => {
 api.get('/text', `Hello apite!`)
 
 // HTML
-api.get('/html', ctx => {
+api.get('/html', (ctx) => {
   ctx.html(`<h1>Hello html!</h1>`)
 })
 
 // 文件
-api.get('/file', ctx => {
+api.get('/file', (ctx) => {
   ctx.file = './index.js'
 })
 
 // 延时返回
-api.get('/delay', async ctx => {
+api.get('/delay', async (ctx) => {
   await delay(1000)
   ctx.json({
-    msg: 'delay 1000ms'
+    msg: 'delay 1000ms',
   })
 })
 
 // 验证码
-api.get('/captcha', ctx => {
+api.get('/captcha', (ctx) => {
   ctx.captcha()
 })
 
@@ -200,12 +208,16 @@ api.get('/captcha', ctx => {
  * @param {string} appid 第三方用户唯一凭证
  * @param {string} secret 第三方用户唯一凭证密钥，即appsecret
  */
-api.get('/proxy', {}, {
-  proxy: {
-    target: 'https://api.weixin.qq.com/cgi-bin/token',
-    rewrite: '/proxy'
+api.get(
+  '/proxy',
+  {},
+  {
+    proxy: {
+      target: 'https://api.weixin.qq.com/cgi-bin/token',
+      rewrite: '/proxy',
+    },
   },
-})
+)
 
 /**
  * @name 代理二
@@ -215,10 +227,11 @@ api.get('/proxy', {}, {
  */
 api.get('/ticket/getticket', {}, true)
 
-
-
 // 图片或其他
-api.get('/image', ctx => {
+api.get('/image', (ctx) => {
   ctx.type = 'png'
-  ctx.body = Buffer.from(`iVBORw0KGgoAAAANSUhEUgAAAJAAAACQAQMAAADdiHD7AAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAFJJREFUeF7t0cENgDAMQ9FwYgxG6WjpaIzCCAxQxVggFuDiCvlLOeRdHR9yzjncHVoq3npu+wQUrUuJHylSTmBaespJyJQoObUeyxDQb3bEm5Au81c0pSCD8HYAAAAASUVORK5CYII=`, 'base64')
+  ctx.body = Buffer.from(
+    `iVBORw0KGgoAAAANSUhEUgAAAJAAAACQAQMAAADdiHD7AAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAFJJREFUeF7t0cENgDAMQ9FwYgxG6WjpaIzCCAxQxVggFuDiCvlLOeRdHR9yzjncHVoq3npu+wQUrUuJHylSTmBaespJyJQoObUeyxDQb3bEm5Au81c0pSCD8HYAAAAASUVORK5CYII=`,
+    'base64',
+  )
 })

@@ -3,11 +3,14 @@
     <div class="menu-bar">
       <div class="tiny-btn left" @click="showMenu = !showMenu">目录</div>
     </div>
-    <div class="side" :class="{show: showMenu}">
-      <h1 class="logo" @click="scrollTop">APITE <span v-if="info.version" class="version">v {{info.version}}</span> </h1>
+    <div class="side" :class="{ show: showMenu }">
+      <h1 class="logo" @click="scrollTop">
+        APITE
+        <span v-if="info.version" class="version">v {{ info.version }}</span>
+      </h1>
       <ul class="nav">
         <li v-for="item in data" :key="item.file">
-          <div class="title" :class="{close: item.close}" @click="item.close = !item.close">{{ item.name }}</div>
+          <div class="title" :class="{ close: item.close }" @click="item.close = !item.close">{{ item.name }}</div>
           <ul class="nav">
             <li v-for="item in item.routes" :key="getMark(item)" @click="scrollTo(item)">
               {{ item.doc.name }}
@@ -16,7 +19,7 @@
         </li>
       </ul>
     </div>
-    <div class="main"  @click="showMenu = false">
+    <div class="main" @click="showMenu = false">
       <div class="doc">
         <!-- doc info -->
         <div class="card" v-if="info.title || info.desc">
@@ -25,30 +28,25 @@
         </div>
 
         <!-- file mod -->
-        <div class="mod" v-for="item in data" :key="data.file">
+        <div class="mod" v-for="(item, index) in data" :key="index">
           <div class="card">
             <h2 class="mod-title">{{ item.name }}</h2>
             <div class="mod-desc" v-if="item.description" v-html="toHtml(item.description)"></div>
           </div>
 
           <!-- api item -->
-          
-          <div
-              class="api card"
-              v-for="item in item.routes"
-              :key="item.method + item.url"
-            > <div class="">
+
+          <div class="api card" v-for="item in item.routes" :key="item.method + item.url">
+            <div class="">
               <h3 class="api-name" :id="getMark(item)">{{ item.doc.name }}</h3>
-              <div
-                class="api-desc"
-                v-if="item.doc.description"
-                v-html="toHtml(item.doc.description)"
-              ></div>
+              <div class="api-desc" v-if="item.doc.description" v-html="toHtml(item.doc.description)"></div>
               <div class="api-url">
-                <span class="mark">接口</span>{{ item.url }}
+                <span class="mark">接口</span>
+                {{ item.url }}
               </div>
               <div class="api-method">
-                <span class="mark">类型</span>{{ item.method }}
+                <span class="mark">类型</span>
+                {{ item.method }}
               </div>
               <div class="api-params" v-if="item.doc.params && item.doc.params.length">
                 <table class="table">
@@ -74,7 +72,7 @@
                   </tbody>
                 </table>
               </div>
-              <div class="tiny-btn right" @click="item.debug = true ">在线调试</div>
+              <div class="tiny-btn right" @click="item.debug = true">在线调试</div>
               <app-request v-if="item.debug" :router="item"></app-request>
             </div>
           </div>
@@ -89,7 +87,7 @@
 </template>
 
 <style lang="scss" scoped>
-@import "./asset/_var";
+@import './asset/_var';
 
 .container {
   margin-left: auto;
@@ -118,11 +116,11 @@
   padding: 10px 0;
   color: #4fc08d;
   position: relative;
-  .version{
+  .version {
     position: absolute;
     right: 0;
     top: 20px;
-    background-color:#f1f4f8;
+    background-color: #f1f4f8;
     color: #999;
     height: 16px;
     line-height: 16px;
@@ -158,7 +156,7 @@
     text-overflow: ellipsis;
     color: #333;
     transition: color 0.2s;
-    &:hover{
+    &:hover {
       color: #4fc08d;
     }
     + .nav {
@@ -174,14 +172,14 @@
   padding: 15px 15px 30px;
 }
 
-.card{
+.card {
   @include clearfix;
   background-color: #fff;
   border-radius: 4px;
   margin-bottom: 15px;
   padding: 0 15px;
 }
-.doc{
+.doc {
   min-height: 90vh;
 }
 .copyright {
@@ -189,12 +187,12 @@
   padding: 10px 0;
   font-size: 12px;
   color: #999;
-  > a{
+  > a {
     color: #999;
     text-decoration: none;
-    opacity: .6;
+    opacity: 0.6;
     margin: 0 10px;
-    &:hover{
+    &:hover {
       color: #0080ff;
       text-decoration: underline;
       opacity: 1;
@@ -269,7 +267,8 @@
   margin-right: 10px;
   vertical-align: 5%;
 }
-.api-method, .api-url {
+.api-method,
+.api-url {
   margin-bottom: 15px;
   font-size: 14px;
 }
@@ -303,7 +302,7 @@
   }
 }
 
-.menu-bar{
+.menu-bar {
   position: absolute;
   height: 44px;
   top: 10px;
@@ -311,13 +310,13 @@
   display: none;
 }
 @media screen and (max-width: 680px) {
-  .menu-bar{
+  .menu-bar {
     display: block;
   }
   .side {
     display: none;
     box-shadow: 6px 0 5px #eee;
-    &.show{
+    &.show {
       display: block;
       left: 0;
     }
@@ -326,7 +325,7 @@
     margin-left: 0;
     padding: 15px 0 30px;
   }
-  .card{
+  .card {
     border-radius: 0;
   }
 }
