@@ -20,7 +20,7 @@ function addRoute({ url, handle, method, options }) {
   unique(url, method)
   if (options === true || options === 1) {
     options = {
-      proxy: true
+      proxy: true,
     }
   }
   let data = {
@@ -28,7 +28,7 @@ function addRoute({ url, handle, method, options }) {
     handle,
     method,
     options,
-    doc: {}
+    doc: {},
   }
   if (FILE.path) {
     data.file = FILE.path
@@ -36,17 +36,15 @@ function addRoute({ url, handle, method, options }) {
   routes.push(data)
 }
 
-
 // 删除重复路由
 function unique(url, method) {
   const key = method + url
   const exited = []
   routes.forEach((item, index) => {
-    if (item.method + item.url === key)
-      exited.push(index)
+    if (item.method + item.url === key) exited.push(index)
   })
   if (!exited.length) return
-  exited.map(index => routes.splice(index, 1))
+  exited.map((index) => routes.splice(index, 1))
 }
 
 // 按文件删除路由
@@ -57,7 +55,7 @@ function delByFile(file) {
       cols.push(index)
     }
   })
-  cols.reverse().forEach(index => routes.splice(index, 1))
+  cols.reverse().forEach((index) => routes.splice(index, 1))
 }
 
 // 不限请求
@@ -66,7 +64,7 @@ function all(url, handle, options) {
     url,
     handle,
     method: '',
-    options
+    options,
   })
 }
 
@@ -76,7 +74,7 @@ function get(url, handle, options) {
     url,
     handle,
     method: 'GET',
-    options
+    options,
   })
 }
 
@@ -86,7 +84,7 @@ function post(url, handle, options) {
     url,
     handle,
     method: 'POST',
-    options
+    options,
   })
 }
 
@@ -96,7 +94,7 @@ function put(url, handle, options) {
     url,
     handle,
     method: 'PUT',
-    options
+    options,
   })
 }
 
@@ -106,7 +104,7 @@ function del(url, handle, options) {
     url,
     handle,
     method: 'DELETE',
-    options
+    options,
   })
 }
 
@@ -115,7 +113,7 @@ function match(pathname) {
   let matchRoute = null
   let paramsArr = []
   let params = {}
-  routes.every(item => {
+  routes.every((item) => {
     // 完全相等
     if (item.url === pathname) {
       matchRoute = item
@@ -131,43 +129,49 @@ function match(pathname) {
     }
     // 带params参数
     if (item.url.indexOf('{') > -1) {
-      const reg = new RegExp('^' + item.url.replace(/{([^/]+)}/g, (a,key)=>{
-        paramsArr.push({
-          key
-        })
-        return '([^/]+)'
-      }) + '$', 'g')
+      const reg = new RegExp(
+        '^' +
+          item.url.replace(/{([^/]+)}/g, (a, key) => {
+            paramsArr.push({
+              key,
+            })
+            return '([^/]+)'
+          }) +
+          '$',
+        'g',
+      )
       const resArr = reg.exec(pathname)
-      if(resArr && resArr.length === paramsArr.length + 1){
-        resArr.forEach((value,index)=>{
-          if(index < 1) return
+      if (resArr && resArr.length === paramsArr.length + 1) {
+        resArr.forEach((value, index) => {
+          if (index < 1) return
           paramsArr[index - 1].value = decodeURIComponent(value)
         })
         matchRoute = item
         return false
-      }else {
+      } else {
         paramsArr = []
       }
     }
     return true
   })
-  if(paramsArr){
-    paramsArr.map(item=>{
+  if (paramsArr) {
+    paramsArr.map((item) => {
       params[item.key] = item.value
     })
   }
-  return {matchRoute, params}
+  return { matchRoute, params }
 }
 
 // 路由处理
 async function handleRoute(ctx) {
-  const {matchRoute, params} = match(ctx.path)
+  const { matchRoute, params } = match(ctx.path)
   ctx.params = params
   if (!matchRoute || matchRoute.handle === undefined || matchRoute.handle === null) {
     ctx.error()
     return
   }
-  if (matchRoute.options && matchRoute.options.proxy) { //代理
+  if (matchRoute.options && matchRoute.options.proxy) {
+    //代理
     const proxyTarget = matchRoute.options.proxy === true ? config.proxy : matchRoute.options.proxy
     if (!proxyTarget) {
       ctx.error(500, 'Please config your proxy url!')
@@ -194,23 +198,28 @@ async function handleRoute(ctx) {
 }
 
 // 第一次启动时加载路由文件
-async function scanRoute(dir = util.appDir()) {
+async function scanRoute(dir = util.appDir(), noCache = false) {
   return new Promise((resolve, reject) => {
     fs.readdir(dir, (err, files) => {
       if (err) reject(err)
-      files.forEach(item => {
+      files.forEach((item) => {
+        if (item.startsWith('_')) return
         const filePath = path.resolve(dir, item)
-        loadFileRoute(filePath)
+        const stats = fs.statSync(filePath)
+        if (stats.isDirectory()) {
+          scanRoute(filePath)
+          return
+        }
+        loadFileRoute(filePath, noCache)
       })
       resolve()
     })
   })
 }
 
-
 // 加载文件路由
 function loadFileRoute(filePath, noCache = false) {
-  if(!filePath) return
+  if (!filePath) return
   if (noCache === true) {
     if (require.cache[filePath]) {
       delete require.cache[filePath]
@@ -223,7 +232,8 @@ function loadFileRoute(filePath, noCache = false) {
     require(filePath)
     jsFileDoc(filePath, routes)
   } catch (err) {
-    if (err.code === 'ENOENT') { //文件删除
+    if (err.code === 'ENOENT') {
+      //文件删除
       return
     }
     console.warn(`【js file】:  ${filePath} has error, please check！\n`, err)

@@ -2,25 +2,25 @@
   <div class="req">
     <div class="post">
       <ul class="tab">
-        <li :class="{ on: req.tab == 1 }" @click="req.tab = 1">Params</li>
-        <li :class="{ on: req.tab == 2 }" @click="req.tab = 2">Headers</li>
-        <li :class="{ on: req.tab == 3 }" @click="req.tab = 3">Body</li>
+        <li :class="{ on: req.tab === 1 }" @click="req.tab = 1">Params</li>
+        <li :class="{ on: req.tab === 2 }" @click="req.tab = 2">Headers</li>
+        <li :class="{ on: req.tab === 3 }" @click="req.tab = 3">Body</li>
       </ul>
-      <ul class="form" v-show="req.tab == 1">
+      <ul class="form" v-show="req.tab === 1">
         <li v-for="(item, index) in req.params" :key="index">
           <input v-model="item.name" type="text" class="input key" placeholder="key" />
           <span class="del" title="删除" @click="handleDel(index)">+</span>
           <input v-model="item.value" type="text" class="input" placeholder="value" />
         </li>
       </ul>
-      <ul class="form" v-show="req.tab == 2">
+      <ul class="form" v-show="req.tab === 2">
         <li v-for="(item, index) in req.headers" :key="index">
           <input type="text" v-model="item.name" class="input hkey" placeholder="key" />
           <span class="del" title="删除" @click="handleDel(index)">+</span>
           <input type="text" v-model="item.value" class="input" placeholder="value" />
         </li>
       </ul>
-      <div class="text-area" v-show="req.tab == 3">
+      <div class="text-area" v-show="req.tab === 3">
         <textarea v-model="req.body"></textarea>
       </div>
       <div class="action">
@@ -29,6 +29,9 @@
         </div>
         <div class="tiny-btn none" title="重置" @click="handleReset">
           <span class="tiny-icon ti-refresh"></span>
+        </div>
+        <div class="tiny-btn none" v-show="req.tab === 2" title="设为公共请求头" @click="handleSaveHeader">
+          <span class="tiny-icon ti-header"></span>
         </div>
         <div class="action-right">
           <div class="tiny-btn left" @click="handlePost">发送</div>
@@ -253,6 +256,9 @@ $min-height: 240px;
 .ti-refresh:before {
   content: '\e61b';
 }
+.ti-header:before {
+  content: '\e666';
+}
 </style>
 
 <script>
@@ -260,6 +266,7 @@ import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import axios from 'axios'
 import nprogress from 'nprogress'
 import { getBaseUrl } from '../../service/common'
+import Toast from '../app-toast'
 
 const ajax = axios.create({
   baseURL: getBaseUrl(),
@@ -277,7 +284,7 @@ export default defineComponent({
     const state = reactive({
       req: {
         tab: 1,
-        headers: [],
+        headers: [...pubHeaders()],
         body: '',
         params: [],
         isParamsUrl: false,
@@ -351,11 +358,33 @@ export default defineComponent({
     // 恢复参数
     function handleReset() {
       state.req.params = []
-      state.req.headers = []
+      state.req.headers = [...pubHeaders()]
       state.req.body = ''
       state.resp.headers = []
       state.resp.body = ''
       renderData()
+    }
+
+    // 设为公共请求头
+    function handleSaveHeader() {
+      console.log(state.req.headers)
+      pubHeaders(state.req.headers)
+      Toast.show('保存成功')
+    }
+
+    // 获取或存储公共请求头
+    function pubHeaders(data) {
+      if (data) {
+        if (!Object.keys(data).length) {
+          window.localStorage.removeItem('_apite_pub_headers')
+          return false
+        }
+        window.localStorage.setItem('_apite_pub_headers', JSON.stringify(state.req.headers))
+        return true
+      } else {
+        const store = window.localStorage.getItem('_apite_pub_headers')
+        return JSON.parse(store || '[]')
+      }
     }
 
     // 发送ajax请求
@@ -477,6 +506,7 @@ export default defineComponent({
     return {
       ...toRefs(state),
       handleReset,
+      handleSaveHeader,
       handleAdd,
       handlePost,
       handleDel,

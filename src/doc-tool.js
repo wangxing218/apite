@@ -17,12 +17,12 @@ function parseDoc(docStr = '') {
   matches.name = nameMatch && nameMatch[1] ? nameMatch[1] : ''
   matches.description = descMatch && descMatch[2] ? descMatch[2] : ''
   if (textMatch) {
-    textMatch.forEach(item => {
+    textMatch.forEach((item) => {
       matches.text.push(item.replace(/^\s*[\r|\n]\s+\*\s+/i, ''))
     })
   }
   if (paramsMatch) {
-    paramsMatch.forEach(item => {
+    paramsMatch.forEach((item) => {
       const itemMatch = item.match(/\*\s+@param\s+(.*)/i)
       if (!itemMatch || !itemMatch[1]) return
       matches.params.push(parseParam(itemMatch[1]))
@@ -35,7 +35,7 @@ function parseDoc(docStr = '') {
     sort: matches.sort,
   }
   res.name = matches.name || matches.text[0] || ''
-  if(!matches.name && matches.text.length){
+  if (!matches.name && matches.text.length) {
     matches.text.shift()
   }
   res.description = matches.description || matches.text.join('\n')
@@ -49,7 +49,7 @@ function parseParam(paramStr) {
     name: '',
     desc: '',
     required: false,
-    default: ''
+    default: '',
   }
   const typeReg = paramStr.match(/{(.*?)}/i)
   const hasType = !!(typeReg && typeReg[1])

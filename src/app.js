@@ -44,13 +44,11 @@ async function initConfig(options = {}) {
   setConfig({
     ...options,
   })
-  if(!config.config) return
+  if (!config.config) return
   let fileConfig = {}
   try {
     fileConfig = require(util.cwd(config.config))
-  } catch (err) {
-
-  }
+  } catch (err) {}
   setConfig({
     ...fileConfig,
   })

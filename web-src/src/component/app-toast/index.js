@@ -1,24 +1,23 @@
-
-import { createApp, ref, h } from 'vue'
+import { createVNode, render } from 'vue'
 import MainToast from './main.vue'
 
-let app = ref(null)
+let instance
 function createTeleport() {
-  if (app.value) return app.value
-  createApp({
-    setup: () => ({ app }),
-    render: () => h(MainToast, { ref: 'app' })
-  }).mount(document.createElement('div'))
-  return app.value
+  if (!instance) {
+    instance = createVNode(MainToast)
+    render(instance, document.createElement('div'))
+    document.body.appendChild(instance.el)
+  }
+  console.log('instance', instance)
+  return instance
 }
 
 function show(msg) {
-  createTeleport().show(msg)
+  createTeleport().component.ctx.show(msg)
 }
 
-function hide(msg) {
-  createTeleport().hide()
+function hide() {
+  createTeleport().component.ctx.hide()
 }
-
 
 export default { show, hide }

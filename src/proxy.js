@@ -5,7 +5,6 @@ const url = require('url')
 const { config } = require('./config')
 const { isObj } = require('./util')
 
-
 async function proxy(ctx, proxy) {
   proxy = proxy || config.proxy
   const proUrl = isObj(proxy) ? proxy.target : proxy
@@ -16,7 +15,7 @@ async function proxy(ctx, proxy) {
 
   let reqUrl = typeof rewrite === 'string' ? ctx.url.replace(rewrite, '') : ctx.url
   if (isObj(rewrite)) {
-    Object.keys(rewrite).map(key => {
+    Object.keys(rewrite).map((key) => {
       reqUrl = reqUrl.replace(key, rewrite[key])
     })
   }
@@ -32,24 +31,24 @@ async function proxy(ctx, proxy) {
         ...reqHeaders,
         Host: parsedUrl.host,
         Origin: origin,
-      }
+      },
     }
-    const proReq = handle.request(options, proRes => {
+    const proReq = handle.request(options, (proRes) => {
       const chunks = []
-      proRes.on('data', data => {
+      proRes.on('data', (data) => {
         chunks.push(data)
       })
       proRes.on('end', () => {
         resolve({
           status: proRes.statusCode,
           header: formatHeaders(proRes.rawHeaders),
-          body: Buffer.concat(chunks)
+          body: Buffer.concat(chunks),
         })
       })
     })
     proReq.on('error', reject)
     if (ctx.method !== 'GET') {
-      proReq.write(ctx.req.rawBody, err => {
+      proReq.write(ctx.req.rawBody, (err) => {
         if (err) reject(err)
         proReq.end()
       })
@@ -70,6 +69,3 @@ function formatHeaders(rawHeader) {
 }
 
 module.exports = proxy
-
-
-

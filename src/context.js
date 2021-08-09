@@ -43,7 +43,7 @@ class context {
     const opt = {
       color: '#0080ff',
       background: '#f2f6fc',
-      ...config
+      ...config,
     }
     const svgCaptcha = require('../lib/captcha')
     const captcha = svgCaptcha.create(opt)
@@ -51,11 +51,11 @@ class context {
     this.body = captcha.data
     return captcha
   }
-  setCookie(name, value, options){
+  setCookie(name, value, options) {
     this._cookieArr.push({
       name,
       value,
-      options
+      options,
     })
   }
 }

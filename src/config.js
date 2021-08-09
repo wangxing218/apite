@@ -35,11 +35,11 @@ const config = {
   docDesc: '',
   // 公共返回格式定义
   resp: {
-    code: ['code', 0], // 成功字段，默认返回码 
+    code: ['code', 0], // 成功字段，默认返回码
     fail: ['fail', 400], // 失败信息，默认返回码
-    msg: ['msg', 'ok'], // 信息字段，默认值 
+    msg: ['msg', 'ok'], // 信息字段，默认值
     result: ['result'], // 结果字段
-    total: ['total', 0] // 列表总数字段，默认值
+    total: ['total', 0], // 列表总数字段，默认值
   },
 }
 

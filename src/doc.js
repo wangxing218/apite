@@ -26,7 +26,7 @@ async function jsFileDoc(filePath, routes = []) {
 function delFileDoc(filePath) {
   const idx = []
   FileDoc.map((item, index) => {
-    if (item.file && item.file === filePath) {
+    if (item.file && item.file.indexOf(filePath) === 0) {
       idx.push(index)
     }
   })

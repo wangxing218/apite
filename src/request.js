@@ -2,7 +2,6 @@ const url = require('url')
 const { config } = require('./config')
 const qs = require('querystring')
 
-
 // 序列化get参数
 function parseQuery(ctx) {
   ctx.url = ctx.req.url
@@ -21,9 +20,9 @@ function parseQuery(ctx) {
 // 序例化post参数
 async function parsePost(ctx) {
   if (ctx.req.method === 'GET') return
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const chunks = []
-    ctx.req.on('data', chunk => {
+    ctx.req.on('data', (chunk) => {
       chunks.push(chunk)
     })
     ctx.req.on('end', () => {
@@ -48,9 +47,7 @@ async function parsePost(ctx) {
   })
 }
 
-
 module.exports = {
   parseQuery,
   parsePost,
 }
-

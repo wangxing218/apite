@@ -22,7 +22,6 @@ exports.webDir = function (...dir) {
   return path.resolve(__dirname, '../web', ...dir)
 }
 
-
 // isObj
 exports.isObj = function (obj) {
   return obj !== null && typeof obj === 'object'
@@ -31,7 +30,7 @@ exports.isObj = function (obj) {
 // 延时
 exports.delay = function (from, to) {
   if (!from) return
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const timeDelay = to && to > from ? exports.random(from, to) : from
     setTimeout(resolve, timeDelay)
   })
@@ -56,11 +55,11 @@ exports.isJSON = function (obj) {
   return obj && typeof obj !== 'string' && obj.toString && obj.toString() === '[object Object]'
 }
 
-// 格式化命令行参数，如 apite --port=9000 
+// 格式化命令行参数，如 apite --port=9000
 exports.parseCMD = function (target = {}) {
   const args = process.argv.slice(2)
   const res = {}
-  args.map(item => {
+  args.map((item) => {
     if (!item.startsWith('--')) return
     const regArr = item.match(/\-\-(\w+)(\=(.*))?/i)
     if (!regArr || regArr.length !== 4) return
@@ -73,7 +72,7 @@ exports.parseCMD = function (target = {}) {
       else val = ''
     } else {
       if (type === 'number') val = Number(val)
-      if (type === 'boolean') val = (val == '0' || val == 'false') ? false : true
+      if (type === 'boolean') val = val == '0' || val == 'false' ? false : true
     }
     res[key] = val
   })
@@ -89,7 +88,7 @@ exports.bindPort = function (port, server) {
     server.once('listening', () => {
       resolve(this.port)
     })
-    server.once('error', err => {
+    server.once('error', (err) => {
       if (err.code === 'EADDRINUSE') {
         this.bindPort(++this.port, server).then(resolve)
       } else {

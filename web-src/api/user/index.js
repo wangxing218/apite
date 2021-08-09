@@ -1,12 +1,12 @@
 /**
  * @sort 1
- * @name 接口示例
+ * @name 用户模块2
  * 接口描述信息，支持html标签
  */
 const { api, delay, mock, resp } = require('apite')
 
 // JSON
-api.get('/json', {
+api.get('/user/json', {
   msg: 'json',
 })
 
@@ -15,7 +15,7 @@ api.get('/json', {
  * 更多语法请参考 <a href="http://mockjs.com/examples.html" target="_blank">mockjs</a>
  */
 api.get(
-  '/mock',
+  '/user/mock',
   mock({
     id: '@id',
     number: '@int(5,9)',
@@ -27,7 +27,7 @@ api.get(
 )
 
 // 实时模拟
-api.get('/mock-time', () =>
+api.get('/user/mock-time', () =>
   mock({
     id: '@id',
     number: '@int(5,9)',
@@ -45,7 +45,7 @@ api.get('/mock-time', () =>
  * @param {number} [age=10] 年龄
  * @param {boolean} [online=true] 是否在线
  */
-api.post('/post', (ctx) => {
+api.post('/user/post', (ctx) => {
   ctx.body = {
     query: ctx.query,
     post: ctx.post,
@@ -57,7 +57,7 @@ api.post('/post', (ctx) => {
  * 点击在线调试传参数请求看看
  * @param {number} id ID
  */
-api.put('/put', (ctx) => {
+api.put('/user/put', (ctx) => {
   ctx.body = {
     query: ctx.query,
     post: ctx.post,
@@ -69,7 +69,7 @@ api.put('/put', (ctx) => {
  * 点击在线调试传参数请求看看
  * @param {number} id ID
  */
-api.del('/del', (ctx) => {
+api.del('/user/del', (ctx) => {
   ctx.body = {
     query: ctx.query,
     post: ctx.post,
@@ -81,7 +81,7 @@ api.del('/del', (ctx) => {
  * @param {number} id 用户id
  * @param {string} name 用户名
  */
-api.post('/user/{id}/{name}', (ctx) => {
+api.post('/user/user/{id}/{name}', (ctx) => {
   ctx.body = {
     params: ctx.params,
     post: ctx.post,
@@ -89,12 +89,12 @@ api.post('/user/{id}/{name}', (ctx) => {
 })
 
 // 获取cookie
-api.get('/cookie', (ctx) => {
+api.get('/user/cookie', (ctx) => {
   return ctx.cookie
 })
 
 // 设置cookie
-api.get('/set-cookie', (ctx) => {
+api.get('/user/set-cookie', (ctx) => {
   ctx.setCookie('user', mock('@name'))
   ctx.setCookie('time', new Date(), {
     maxAge: 15,
@@ -112,7 +112,7 @@ api.get('/set-cookie', (ctx) => {
  * 返回格式可按要求在config里定制
  *
  */
-api.get('/resp/ok', resp.ok('添加成功'))
+api.get('/user/resp/ok', resp.ok('添加成功'))
 
 /**
  * @name 统一返回失败
@@ -122,7 +122,7 @@ api.get('/resp/ok', resp.ok('添加成功'))
  * resp.list(list, total, ext) 返回列表
  * 返回格式可按要求在config里定制
  */
-api.get('/resp/fail', resp.fail('失败了'))
+api.get('/user/resp/fail', resp.fail('失败了'))
 
 /**
  * @name 统一返回mock
@@ -132,7 +132,7 @@ api.get('/resp/fail', resp.fail('失败了'))
  * resp.list(list, total, ext) 返回列表
  * 返回格式可按要求在config里定制
  */
-api.get('/resp/mock', () =>
+api.get('/user/resp/mock', () =>
   resp.mock({
     'data|10': [
       {
@@ -154,7 +154,7 @@ api.get('/resp/mock', () =>
  * resp.list(list, total, ext) 返回列表
  * 返回格式可按要求在config里定制
  */
-api.get('/resp/list', (ctx) => {
+api.get('/user/resp/list', (ctx) => {
   const data = mock({
     'list|10': [
       {
@@ -169,27 +169,27 @@ api.get('/resp/list', (ctx) => {
 })
 
 // JSONP
-api.get('/jsonp', (ctx) => {
+api.get('/user/jsonp', (ctx) => {
   ctx.jsonp({
     msg: 'jsonp',
   })
 })
 
 // 文本
-api.get('/text', `Hello apite!`)
+api.get('/user/text', `Hello apite!`)
 
 // HTML
-api.get('/html', (ctx) => {
+api.get('/user/html', (ctx) => {
   ctx.html(`<h1>Hello html!</h1>`)
 })
 
 // 文件
-api.get('/file', (ctx) => {
+api.get('/user/file', (ctx) => {
   ctx.file = './index.js'
 })
 
 // 延时返回
-api.get('/delay', async (ctx) => {
+api.get('/user/delay', async (ctx) => {
   await delay(1000, 4000)
   ctx.json({
     msg: 'delay 1000ms to 4000ms',
@@ -197,7 +197,7 @@ api.get('/delay', async (ctx) => {
 })
 
 // 验证码
-api.get('/captcha', (ctx) => {
+api.get('/user/captcha', (ctx) => {
   ctx.captcha()
 })
 
@@ -209,7 +209,7 @@ api.get('/captcha', (ctx) => {
  * @param {string} secret 第三方用户唯一凭证密钥，即appsecret
  */
 api.get(
-  '/proxy',
+  '/user/proxy',
   {},
   {
     proxy: {
@@ -225,13 +225,153 @@ api.get(
  * @param {string} access_token 获取到的access_token
  * @param {string} [type=wx_card] 类型：获取ticket
  */
-api.get('/ticket/getticket', {}, true)
+api.get('/user/ticket/getticket', {}, true)
 
 // 图片或其他
-api.get('/image', (ctx) => {
+api.get('/user/image', (ctx) => {
   ctx.type = 'png'
   ctx.body = Buffer.from(
     `iVBORw0KGgoAAAANSUhEUgAAAJAAAACQAQMAAADdiHD7AAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAFJJREFUeF7t0cENgDAMQ9FwYgxG6WjpaIzCCAxQxVggFuDiCvlLOeRdHR9yzjncHVoq3npu+wQUrUuJHylSTmBaespJyJQoObUeyxDQb3bEm5Au81c0pSCD8HYAAAAASUVORK5CYII=`,
     'base64',
   )
+})
+
+/**
+ * @name POST请求
+ * 点击在线调试传参数请求看看
+ * @param {string} name 名称
+ * @param {number} [age=10] 年龄
+ * @param {boolean} [online=true] 是否在线
+ */
+api.post('/user/post1', (ctx) => {
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
+})
+
+/**
+ * @name POST请求
+ * 点击在线调试传参数请求看看
+ * @param {string} name 名称
+ * @param {number} [age=10] 年龄
+ * @param {boolean} [online=true] 是否在线
+ */
+api.post('/user/post2', (ctx) => {
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
+})
+
+/**
+ * @name POST请求
+ * 点击在线调试传参数请求看看
+ * @param {string} name 名称
+ * @param {number} [age=10] 年龄
+ * @param {boolean} [online=true] 是否在线
+ */
+api.post('/user/post3', (ctx) => {
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
+})
+
+/**
+ * @name POST请求
+ * 点击在线调试传参数请求看看
+ * @param {string} name 名称
+ * @param {number} [age=10] 年龄
+ * @param {boolean} [online=true] 是否在线
+ */
+api.post('/user/post4', (ctx) => {
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
+})
+
+/**
+ * @name POST请求
+ * 点击在线调试传参数请求看看
+ * @param {string} name 名称
+ * @param {number} [age=10] 年龄
+ * @param {boolean} [online=true] 是否在线
+ */
+api.post('/user/post5', (ctx) => {
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
+})
+
+/**
+ * @name POST请求
+ * 点击在线调试传参数请求看看
+ * @param {string} name 名称
+ * @param {number} [age=10] 年龄
+ * @param {boolean} [online=true] 是否在线
+ */
+api.post('/user/post6', (ctx) => {
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
+})
+
+/**
+ * @name POST请求
+ * 点击在线调试传参数请求看看
+ * @param {string} name 名称
+ * @param {number} [age=10] 年龄
+ * @param {boolean} [online=true] 是否在线
+ */
+api.post('/user/post7', (ctx) => {
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
+})
+
+/**
+ * @name POST请求
+ * 点击在线调试传参数请求看看
+ * @param {string} name 名称
+ * @param {number} [age=10] 年龄
+ * @param {boolean} [online=true] 是否在线
+ */
+api.post('/user/post8', (ctx) => {
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
+})
+
+/**
+ * @name POST请求
+ * 点击在线调试传参数请求看看
+ * @param {string} name 名称
+ * @param {number} [age=10] 年龄
+ * @param {boolean} [online=true] 是否在线
+ */
+api.post('/user/post9', (ctx) => {
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
+})
+
+/**
+ * @name POST请求
+ * 点击在线调试传参数请求看看
+ * @param {string} name 名称
+ * @param {number} [age=10] 年龄
+ * @param {boolean} [online=true] 是否在线
+ */
+api.post('/user/post10', (ctx) => {
+  ctx.body = {
+    query: ctx.query,
+    post: ctx.post,
+  }
 })

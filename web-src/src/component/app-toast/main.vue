@@ -8,23 +8,21 @@
 
 <style lang="scss" scoped>
 .toast {
-  background-color: rgba(0,0,0,.7);
+  background-color: rgba(0, 0, 0, 0.7);
   padding: 10px 30px;
   font-size: 16px;
   color: #fff;
   position: fixed;
-  max-width: 280px;
-  left: 0;
-  top: 5vh;
-  right: 0;
-  margin: 0 auto;
+  left: 50%;
+  top: 20%;
   z-index: 999;
   border-radius: 4px;
   text-align: center;
+  transform: translateX(-50%);
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity .15s, transform .2s;
+  transition: opacity 0.15s, transform 0.2s;
 }
 .fade-enter-from,
 .fade-leave-to {
@@ -37,25 +35,25 @@
 import { defineComponent, reactive, toRefs } from 'vue'
 
 export default defineComponent({
-  setup(){
+  setup() {
     const state = reactive({
       msg: '',
-      visible: false
+      visible: false,
     })
     let tick = null
-    function show(msg = ''){
+    function show(msg = '', duration = 2.5) {
       clear()
       state.msg = msg
       state.visible = true
-      tick = setTimeout(()=>{
+      tick = setTimeout(() => {
         hide()
-      }, 3000)
+      }, duration * 1000)
     }
-    function hide(){
+    function hide() {
       clearTimeout(tick)
       state.visible = false
     }
-    function clear(){
+    function clear() {
       clearTimeout(tick)
       tick = null
     }
@@ -64,7 +62,6 @@ export default defineComponent({
       show,
       hide,
     }
-  }
+  },
 })
-
 </script>

@@ -27,7 +27,6 @@ async function respBody(ctx) {
   }
   if (typeof ctx.body === 'string') return
   if (ctx.body instanceof Buffer) return
-  
   else if (ctx.type === 'json' || ctx.type === 'jsonp' || isObj(ctx.body)) {
     ctx.type = ctx.type || 'json'
     const callback = ctx.query.callback || 'callback'
@@ -49,7 +48,6 @@ function isIE(ctx) {
   const agent = ctx.req.headers['user-agent']
   return agent.indexOf('MSIE') > 0 || agent.indexOf('rv:11') > 0
 }
-
 
 // 响应头
 async function respHeaders(ctx) {
@@ -77,21 +75,19 @@ async function respHeaders(ctx) {
   }
 }
 
-
 // 发送文件
 function getFileData(file) {
   return new Promise((resolve, reject) => {
     const relFile = path.isAbsolute(file) ? file : appDir(file)
     const read = fs.createReadStream(relFile)
     const chunks = []
-    read.on('data', data => chunks.push(data))
+    read.on('data', (data) => chunks.push(data))
     read.on('end', () => {
       resolve(Buffer.concat(chunks))
     })
     read.on('error', reject)
   })
 }
-
 
 module.exports = {
   handleBody,

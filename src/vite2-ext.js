@@ -1,11 +1,10 @@
-
 const { config, setConfig } = require('./config')
 const apite = require('./app')
 const util = require('./util')
 
 // 默认配置
 const defaultOpt = {
-  prefix: '/api'
+  prefix: '/api',
 }
 
 // 插件入口
@@ -16,10 +15,10 @@ function vite2Ext(options = {}) {
     configureServer(server) {
       apite.init({
         ...defaultOpt,
-        ...options
+        ...options,
       })
       handleApp(server)
-    }
+    },
   }
 }
 
@@ -29,7 +28,7 @@ function handleApp(server) {
     setConfig({
       port,
     })
-    setTimeout(()=>util.startLog(), 300)
+    setTimeout(() => util.startLog(), 300)
   })
   server.middlewares.use((req, res, next) => {
     if (!req.url.startsWith(config.prefix)) {
@@ -38,7 +37,6 @@ function handleApp(server) {
     }
     apite.handle(req, res)
   })
-
 }
 
 module.exports = vite2Ext

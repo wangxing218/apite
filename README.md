@@ -58,21 +58,21 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于 nodejs 的�
 
   ```js
   // vite.config.js
-  import { viteExt } from "apite";
-
-  export default {
-    // other config
-    configureServer: [
-      viteExt({
-        /**ExtConfig*/
-      }),
-    ],
-  };
-  // vite2.0
   import { vite2Ext } from "apite";
   export default {
     plugins: [
       vite2Ext({
+        /**ExtConfig*/
+      }),
+    ],
+  };
+
+  // vite1.0
+  import { viteExt } from "apite";
+  export default {
+    // other config
+    configureServer: [
+      viteExt({
         /**ExtConfig*/
       }),
     ],
@@ -88,7 +88,7 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于 nodejs 的�
 
   ```js
   // webpack.config.js / vue.config.js
-  const { webpackExt } = require("apite");
+  const { webpackExt } = require('apite')
 
   module.exports = {
     // other config
@@ -97,18 +97,18 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于 nodejs 的�
         /**ExtConfig*/
       }),
     },
-  };
+  }
   ```
 
   > 使用 create-react-app 创建的 react 项目，可以使用下面的配置
 
   ```js
   // 新建 /src/setupProxy.js，并写入
-  const { webpackExt } = require("apite");
+  const { webpackExt } = require('apite')
 
   module.exports = webpackExt({
     /**ExtConfig*/
-  });
+  })
   ```
 
   > react 项目中如果不存在 webpack 配置文件，可以使用 npm run eject 释放  
@@ -192,16 +192,16 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于 nodejs 的�
  * @name 接口示例
  * 接口描述
  */
-const { api, delay, mock, resp } = require("apite");
+const { api, delay, mock, resp } = require('apite')
 ```
 
 - 返回一个 json
 
   ```js
   // JSON
-  api.get("/json", {
-    msg: "json",
-  });
+  api.get('/json', {
+    msg: 'json',
+  })
   ```
 
 - 模拟数据
@@ -214,19 +214,19 @@ const { api, delay, mock, resp } = require("apite");
    * @param {number} [age=10] 年龄
    * @param {boolean} [online=true] 是否在线
    */
-  api.post("/post", (ctx) => {
+  api.post('/post', (ctx) => {
     return mock({
-      id: "@id",
-      number: "@int(5,9)",
-      name: "@name",
-      cname: "@cname",
-      date: "@dateTime",
+      id: '@id',
+      number: '@int(5,9)',
+      name: '@name',
+      cname: '@cname',
+      date: '@dateTime',
       reg: /\w{10}/,
-    });
-  });
+    })
+  })
   ```
 
-- 更多写法请参考 [官网示例](https://apite.frp.boyxing.com/)
+- 更多写法请参考 [node_modules/apite/web-src/api/index.js]
 
 ## 未来功能规划
 
@@ -235,6 +235,13 @@ const { api, delay, mock, resp } = require("apite");
 - 源码中的 web 服务考虑使用用 koa 的洋葱模型实现
 
 ## 版本更新
+
+### v1.3.0
+
+- api 文档页支持设公共请求头置，例如 Token 设置
+- 文件兼听切换为 node-watch 库，优化兼容性
+- mock 文件支持文件夹嵌套 [issues 1](https://github.com/wangxing218/apite/issues/1)
+- 解决 delay 第二个参数报错的 bug, [pull requests 2](https://github.com/wangxing218/apite/pull/2)，感谢 [spivet](https://github.com/spivet)
 
 ### v1.2.4
 

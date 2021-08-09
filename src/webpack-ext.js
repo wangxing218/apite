@@ -1,18 +1,17 @@
-
 const { config, setConfig } = require('./config')
 const apite = require('./app')
 const util = require('./util')
 
 // 默认配置
 const defaultOpt = {
-  prefix: '/api'
+  prefix: '/api',
 }
 
 // 插件入口
 function webpackExt(options = {}) {
   apite.init({
     ...defaultOpt,
-    ...options
+    ...options,
   })
   return handleApp
 }
@@ -32,7 +31,7 @@ function handleApp(app, server) {
     setConfig({
       port,
     })
-    setTimeout(()=>util.startLog(), 300)
+    setTimeout(() => util.startLog(), 300)
   })
 }
 
