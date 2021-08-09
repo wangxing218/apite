@@ -32,7 +32,7 @@ exports.isObj = function (obj) {
 exports.delay = function (from, to) {
   if (!from) return
   return new Promise(resolve => {
-    const timeDelay = to && to > from ? random(from, to) : from
+    const timeDelay = to && to > from ? exports.random(from, to) : from
     setTimeout(resolve, timeDelay)
   })
 }
