@@ -8,13 +8,13 @@
 
 <style lang="scss" scoped>
 .toast {
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 10px 30px;
-  font-size: 16px;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px 20px;
+  font-size: 14px;
   color: #fff;
   position: fixed;
   left: 50%;
-  top: 20%;
+  top: 40px;
   z-index: 999;
   border-radius: 4px;
   text-align: center;
@@ -22,12 +22,12 @@
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.15s, transform 0.2s;
+  transition: opacity ease-out 0.1s, transform ease-out 0.1s;
 }
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transform: translateY(-100px);
+  transform: translate(-50%, -30px);
 }
 </style>
 
@@ -41,7 +41,7 @@ export default defineComponent({
       visible: false,
     })
     let tick = null
-    function show(msg = '', duration = 2.5) {
+    function show(msg = '', duration = 2) {
       clear()
       state.msg = msg
       state.visible = true

@@ -21,7 +21,7 @@
         </li>
       </ul>
       <div class="text-area" v-show="req.tab === 3">
-        <textarea v-model="req.body"></textarea>
+        <textarea spellcheck="false" v-model="req.body"></textarea>
       </div>
       <div class="action">
         <div class="tiny-btn none" title="添加参数" @click="handleAdd">
@@ -48,7 +48,7 @@
           <img :src="resp.body" />
         </div>
         <div class="text-area" v-else>
-          <textarea v-model="resp.body"></textarea>
+          <textarea spellcheck="false" v-model="resp.body"></textarea>
         </div>
       </div>
       <ul class="form resp-con" v-show="resp.tab == 2">
@@ -265,7 +265,7 @@ $min-height: 240px;
 import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import axios from 'axios'
 import nprogress from 'nprogress'
-import { getBaseUrl } from '../../service/common'
+import { getBaseUrl, urlEncode } from '../../service/common'
 import Toast from '../app-toast'
 
 const ajax = axios.create({
@@ -424,6 +424,14 @@ export default defineComponent({
         if (!item.name) return
         headers[item.name] = item.value
       })
+
+      // form表单提交
+      const isForm = Object.keys(headers).filter((key) => {
+        return key.toLowerCase() === 'content-type' && headers[key].indexOf('application/x-www-form') > -1
+      })
+      if (isForm.length) {
+        data = urlEncode(data)
+      }
       nprogress.start()
       nprogress.inc(0.6)
       ajax({
