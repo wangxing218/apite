@@ -236,6 +236,12 @@ const { api, delay, mock, resp } = require('apite')
 
 ## 版本更新
 
+### v1.3.1
+
+- 优化 toast 提示样式
+- 支持 form 表单，form-data, text 等提交方式
+- 请求头 Content-Type 字段支持输入和下拉快速选择
+
 ### v1.3.0
 
 - api 文档页支持设公共请求头置，例如 Token 设置

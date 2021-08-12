@@ -17,7 +17,15 @@
         <li v-for="(item, index) in req.headers" :key="index">
           <input type="text" v-model="item.name" class="input hkey" placeholder="key" />
           <span class="del" title="删除" @click="handleDel(index)">+</span>
-          <input type="text" v-model="item.value" class="input" placeholder="value" />
+          <input v-if="/^content-type$/i.test(item.name)" list="ctype_list" type="text" v-model="item.value" class="input" placeholder="value" />
+          <input v-else type="text" v-model="item.value" class="input" placeholder="value" />
+          <!-- ctype_list -->
+          <datalist id="ctype_list">
+            <option value="application/json" />
+            <option value="application/x-www-form-urlencoded" />
+            <option value="multipart/form-data" />
+            <option value="text/plain" />
+          </datalist>
         </li>
       </ul>
       <div class="text-area" v-show="req.tab === 3">
@@ -394,15 +402,20 @@ export default defineComponent({
       let data = {}
       let headers = {}
       let url = router.url
-      // 请求数据
+
+      // headers 请求头
+      state.req.headers.map((item) => {
+        if (!item.name) return
+        headers[item.name] = item.value
+      })
+
+      // query 参数
       if (state.req.params.length) {
         state.req.params.forEach((item) => {
           params[item.name] = item.value
         })
       }
-      if (!state.req.isGet) {
-        data = strToJson(state.req.body)
-      }
+
       // url参数替换
       if (state.req.isParamsUrl) {
         url = url.replace(/{(\w+)}/gi, (a, key) => {
@@ -414,24 +427,32 @@ export default defineComponent({
           return ''
         })
       }
-      // 通配符替换
       if (url.indexOf('*') === url.length - 1) {
         url = url.replace(/\*+$/, '')
       }
 
-      // 头
-      state.req.headers.map((item) => {
-        if (!item.name) return
-        headers[item.name] = item.value
-      })
-
-      // form表单提交
-      const isForm = Object.keys(headers).filter((key) => {
-        return key.toLowerCase() === 'content-type' && headers[key].indexOf('application/x-www-form') > -1
-      })
-      if (isForm.length) {
-        data = urlEncode(data)
+      // body请求体
+      if (!state.req.isGet) {
+        // form表单
+        if (includeCType('application/x-www-form', headers)) {
+          data = urlEncode(strToJson(state.req.body))
+        } else if (includeCType('text', headers)) {
+          // text
+          data = encodeURIComponent(state.req.body)
+        } else if (includeCType('multipart/form-data', headers)) {
+          // 文件表单
+          const bodyFieds = strToJson(state.req.body)
+          const formData = new FormData()
+          for (let key in bodyFieds) {
+            formData.append(key, bodyFieds[key])
+          }
+          data = formData
+        } else {
+          // 默认为 json
+          data = strToJson(state.req.body)
+        }
       }
+
       nprogress.start()
       nprogress.inc(0.6)
       ajax({
@@ -449,6 +470,14 @@ export default defineComponent({
         .finally(() => {
           nprogress.done()
         })
+    }
+
+    // 判断header头中content-type是否含有指定值
+    function includeCType(contentType = '', headers = {}) {
+      const arr = Object.keys(headers).filter((key) => {
+        return key.toLowerCase() === 'content-type' && headers[key].indexOf(contentType) > -1
+      })
+      return !!arr.length
     }
 
     // 按类型对params 数据 进行格式化
