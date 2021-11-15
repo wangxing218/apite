@@ -100,6 +100,22 @@ apite 是 api + lite 的简写，读：[əˈpaɪt]，是一个基于 nodejs 的�
   }
   ```
 
+  > 针对webpack-dev-server@4.x 及以上的版本请使用以下方式
+
+  ```js
+  // webpack.config.js / vue.config.js
+  const { webpackExt4 } = require('apite')
+
+  module.exports = {
+    // other config
+    devServer: {
+      onBeforeSetupMiddleware: webpackExt4({
+        /**ExtConfig*/
+      }),
+    },
+  }
+  ```
+
   > 使用 create-react-app 创建的 react 项目，可以使用下面的配置
 
   ```js
@@ -235,6 +251,12 @@ const { api, delay, mock, resp } = require('apite')
 - 源码中的 web 服务考虑使用用 koa 的洋葱模型实现
 
 ## 版本更新
+
+### v1.4.0
+
+- 解决在 webpack 项目中，执行 build 构建时无法自动退出控制台的问题
+- 支持最新的webpack-dev-server@4.x版本，api 发生变化
+- 请求头的 key，增加 Content-type,Token 等常见 key 的下拉输入
 
 ### v1.3.1
 

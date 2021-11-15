@@ -1,14 +1,18 @@
-
 interface ApiteTypes {
   handle: (ctx: Context) => any | string
-  methodOptions: boolean | {
-    proxy: string | ApiteTypes['proxyConfig']
-  }
+  methodOptions:
+    | boolean
+    | {
+        proxy: string | ApiteTypes['proxyConfig']
+      }
   proxyConfig: {
-    target: string,
-    rewrite?: boolean | string | {
-      [key: string]: string
-    }
+    target: string
+    rewrite?:
+      | boolean
+      | string
+      | {
+          [key: string]: string
+        }
   }
   captchaOptions: {
     color?: string
@@ -42,7 +46,7 @@ interface Context {
   html: (html: string) => void
   error: (code: number, body: string) => void
   setCookie: (name: string, value: string, options: ApiteTypes['cookieOptions']) => void
-  captcha: (options: ApiteTypes['captchaOptions']) => { data: Buffer, text: code }
+  captcha: (options: ApiteTypes['captchaOptions']) => { data: Buffer; text: string }
 }
 
 interface RouterApi {
@@ -83,15 +87,15 @@ interface ExtOptions {
   // 文档标题
   docTitle?: string
   // 文档描述，文本或markdown文档地址，相对于根目录
-  docDesc?: string,
+  docDesc?: string
   // 公共返回格式定义
   resp?: {
-    code: ['code', 0], // 成功字段，默认返回码 
-    fail: ['fail', 400], // 失败信息，默认返回码
-    msg: ['msg', 'ok'], // 信息字段，默认值 
-    result: ['result'], // 结果字段
+    code: ['code', 0] // 成功字段，默认返回码
+    fail: ['fail', 400] // 失败信息，默认返回码
+    msg: ['msg', 'ok'] // 信息字段，默认值
+    result: ['result'] // 结果字段
     total: ['total', 0] // 列表总数字段，默认值
-  },
+  }
 }
 
 interface ApiteConfig extends ExtOptions {
@@ -121,6 +125,7 @@ declare module 'apite' {
   function delay(from: number, to?: number): Promise<void>
   function mock(mockObj: any): any
   function webpackExt(options: ExtOptions): Function
+  function webpackExt4(options: ExtOptions): Function
   function viteExt(options: ExtOptions): Function
   function vite2Ext(options: ExtOptions): Function
 }

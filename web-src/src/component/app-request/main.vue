@@ -15,7 +15,12 @@
       </ul>
       <ul class="form" v-show="req.tab === 2">
         <li v-for="(item, index) in req.headers" :key="index">
-          <input type="text" v-model="item.name" class="input hkey" placeholder="key" />
+          <input type="text" v-model="item.name" list="hd_keys" class="input hkey" placeholder="key" />
+          <datalist id="hd_keys">
+            <option value="Content-Type" />
+            <option value="Authorization" />
+            <option value="Token" />
+          </datalist>
           <span class="del" title="删除" @click="handleDel(index)">+</span>
           <input v-if="/^content-type$/i.test(item.name)" list="ctype_list" type="text" v-model="item.value" class="input" placeholder="value" />
           <input v-else type="text" v-model="item.value" class="input" placeholder="value" />

@@ -8,9 +8,9 @@ const defaultOpt = {
 }
 
 // 插件入口
-function webpackExt(options = {}) {
+function webpackExt4(options = {}) {
   // 非serve环境
-  if (!process.env.WEBPACK_DEV_SERVER) return
+  if (!process.env.WEBPACK_SERVE) return
   apite.init({
     ...defaultOpt,
     ...options,
@@ -19,9 +19,9 @@ function webpackExt(options = {}) {
 }
 
 // 插件执行
-function handleApp(app, server) {
+function handleApp(server) {
   // app为express实例
-  app.all(config.prefix + '/*', apite.handle)
+  server.app.all(config.prefix + '/*', apite.handle)
 
   // react项目中如果使用 /src/setupProxy.js，则不存在sever参数
   if (!server) return
@@ -37,4 +37,4 @@ function handleApp(app, server) {
   })
 }
 
-module.exports = webpackExt
+module.exports = webpackExt4
