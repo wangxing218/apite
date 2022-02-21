@@ -34,7 +34,7 @@ async function respBody(ctx) {
       Mock.mock(ctx.body)
     }
     try {
-      let res = JSON.stringify(ctx.body || {}, null, config.jsonFormat ? '  ' : null)
+      let res = JSON.stringify(Object.assign(ctx.body || {}, config.mockTips !== false && {mockTips: config.mockTips}), null, config.jsonFormat ? '  ' : null)
       ctx.body = ctx.type === 'jsonp' ? `${callback}(${res})` : res
     } catch (error) {
       console.log(error)

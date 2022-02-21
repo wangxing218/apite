@@ -41,6 +41,7 @@ const config = {
     result: ['result'], // 结果字段
     total: ['total', 0], // 列表总数字段，默认值
   },
+  mockTips: '请注意这个是mock接口～', // mock接口时的提醒，设置为false时不显示
 }
 
 // 覆盖配置
