@@ -252,6 +252,10 @@ const { api, delay, mock, resp } = require('apite')
 
 ## 版本更新
 
+### v1.4.1
+
+- 响应头区分走 mock 数据还是走代理 'Data-From': 'proxy'
+
 ### v1.4.0
 
 - 解决在 webpack 项目中，执行 build 构建时无法自动退出控制台的问题

@@ -178,7 +178,10 @@ async function handleRoute(ctx) {
     }
     try {
       const resp = await proxy(ctx, proxyTarget)
-      ctx.header = resp.header
+      ctx.header = {
+        'Data-From': 'proxy',
+        ...resp.header,
+      }
       ctx.status = resp.status
       ctx.body = resp.body
     } catch (err) {
