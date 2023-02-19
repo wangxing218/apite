@@ -20,7 +20,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.5",
     "@vue/compiler-sfc": "^3.1.5",
-    "apite": "^1.4.1",
+    "apite": "file:..",
     "autoprefixer": "^9.8.6",
     "postcss-px2rem": "^0.3.0",
     "sass": "^1.27.0",
