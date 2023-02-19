@@ -1,6 +1,6 @@
 {
   "name": "apite",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "一个基于nodejs的轻量级api生成工具",
   "main": "index.js",
   "bin": {
@@ -26,5 +26,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "homepage": "https://apite.frp.boyxing.com/"
+  "homepage": "https://apite.frp.laicl.com/"
 }
