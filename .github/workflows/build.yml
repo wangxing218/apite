@@ -12,16 +12,13 @@ on:
 
 jobs:
   build:
-    name: 构建发布
+    name: 构建
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org/
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          node-version: 18
       - run: |
           echo "发布说明: ${{ github.event.inputs.mark }}"
       - run: |
@@ -29,4 +26,16 @@ jobs:
           npm install
           npm run build
           cd ..
-          npm publish
+  publish-npm:
+    name: 发布 npm
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
