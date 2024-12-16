@@ -21,16 +21,25 @@ async function proxy(ctx, proxy) {
   }
   const reqPath = parsedUrl.pathname + reqUrl
   const reqHeaders = formatHeaders(ctx.req.rawHeaders)
+
+  // 覆盖请求头,比如说referer,user-agent 等,有的后端需要验证referer
+  const overrideHeaders = proxy && isObj(proxy.overrideHeaders) ? proxy.overrideHeaders : {}
+  
+  // 忽略证书风险问题导致的501问题
+  const proxySecure = isObj(proxy) ? proxy.secure : true
+  
   return new Promise((resolve, reject) => {
     const options = {
       hostname: parsedUrl.hostname,
       port: parsedUrl.port,
       path: reqPath,
       method: ctx.method,
+      rejectUnauthorized: proxySecure,
       headers: {
         ...reqHeaders,
         Host: parsedUrl.host,
         Origin: origin,
+        ...overrideHeaders
       },
     }
     const proReq = handle.request(options, (proRes) => {
