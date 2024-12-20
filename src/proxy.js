@@ -19,7 +19,12 @@ async function proxy(ctx, proxy) {
       reqUrl = reqUrl.replace(key, rewrite[key])
     })
   }
-  const reqPath = parsedUrl.pathname + reqUrl
+
+  let reqPath = parsedUrl.pathname + reqUrl
+  if(reqPath.startsWith('//')){
+    reqPath =  '/' + reqPath.slice(2);
+  }
+
   const reqHeaders = formatHeaders(ctx.req.rawHeaders)
 
   // 覆盖请求头,比如说referer,user-agent 等,有的后端需要验证referer
@@ -71,7 +76,11 @@ function formatHeaders(rawHeader) {
   const res = {}
   rawHeader.map((item, index) => {
     if (index % 2 == 0) {
-      res[item] = rawHeader[index + 1]
+      // 本地https模式不去除这些会导致请求代理失败
+      const whiteHeaders = [':method',':authority',':scheme',':path','Connection']
+      if(!whiteHeaders.includes(item)){
+        res[item] = rawHeader[index + 1]
+      }
     }
   })
   return res
