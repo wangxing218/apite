@@ -1,6 +1,6 @@
 {
   "name": "apite",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "一个基于nodejs的轻量级api生成工具",
   "main": "index.js",
   "bin": {
