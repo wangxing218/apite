@@ -24,6 +24,10 @@ jobs:
         with:
           node-version: 18
           registry-url: https://registry.npmjs.org/
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 7
+
       - run: |
           echo "发布说明: ${{ github.event.inputs.mark }}"
       - run: |
