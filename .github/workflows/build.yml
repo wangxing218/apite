@@ -26,21 +26,18 @@ jobs:
           version: 7
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org/
 
       - name: 发布说明
         run: |
           echo "${{ github.event.inputs.mark }}"
 
-      - name: 打包
+      - name: 打包发布
         run: |
           cd web-src
           pnpm install
           npm run build
-
-      - name: 发布
-        run: |
           cd ..
-          npm install -g npm@latest
+          ls -al
           npm publish
