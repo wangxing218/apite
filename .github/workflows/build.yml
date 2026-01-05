@@ -21,21 +21,24 @@ jobs:
     steps:
       - name: 环境配置
         uses: actions/checkout@v4
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 7
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
           registry-url: https://registry.npmjs.org/
+
       - name: 发布说明
         run: |
           echo "${{ github.event.inputs.mark }}"
+
       - name: 打包
         run: |
           cd web-src
           pnpm install
           npm run build
+
       - name: 发布
         run: |
           cd ..
