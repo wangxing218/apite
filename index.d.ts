@@ -7,6 +7,8 @@ interface ApiteTypes {
       }
   proxyConfig: {
     target: string
+    overrideHeaders?: Record<string, string>
+    secure?: boolean
     rewrite?:
       | boolean
       | string
@@ -28,6 +30,7 @@ interface ApiteTypes {
     secure: boolean
   }
 }
+type Buffer = /*unresolved*/ any
 interface Context {
   method?: string
   header?: object

@@ -87,7 +87,7 @@
 </template>
 
 <style lang="scss" scoped>
-@import './asset/_var';
+@use './asset/_var' as *;
 
 .container {
   margin-left: auto;
@@ -97,6 +97,7 @@
   height: 100%;
   width: 100%;
 }
+
 .side {
   user-select: none;
   position: fixed;
@@ -116,6 +117,7 @@
   padding: 10px 0;
   color: #4fc08d;
   position: relative;
+
   .version {
     position: absolute;
     right: 0;
@@ -131,16 +133,19 @@
     border-radius: 4px;
   }
 }
+
 .nav {
   line-height: 28px;
   font-size: 14px;
-  > li li {
+
+  >li li {
     cursor: pointer;
     color: #455a64;
     transition: color 0.2s;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
     &:hover {
       color: #4fc08d;
     }
@@ -156,17 +161,21 @@
     text-overflow: ellipsis;
     color: #333;
     transition: color 0.2s;
+
     &:hover {
       color: #4fc08d;
     }
-    + .nav {
+
+    +.nav {
       display: block;
     }
-    &.close + .nav {
+
+    &.close+.nav {
       display: none;
     }
   }
 }
+
 .main {
   margin-left: 200px;
   padding: 15px 15px 30px;
@@ -179,19 +188,23 @@
   margin-bottom: 15px;
   padding: 0 15px;
 }
+
 .doc {
   min-height: 90vh;
 }
+
 .copyright {
   text-align: center;
   padding: 10px 0;
   font-size: 12px;
   color: #999;
-  > a {
+
+  >a {
     color: #999;
     text-decoration: none;
     opacity: 0.6;
     margin: 0 10px;
+
     &:hover {
       color: #0080ff;
       text-decoration: underline;
@@ -199,11 +212,13 @@
     }
   }
 }
+
 .doc-title {
   font-size: 28px;
   padding: 10px 0;
   border-bottom: 1px solid rgba(204, 204, 204, 0.3);
 }
+
 .doc-desc {
   padding: 5px 0;
   margin-top: 10px;
@@ -211,38 +226,46 @@
   font-size: 14px;
   line-height: 22px;
   color: #555;
-  > p {
+
+  >p {
     margin-bottom: 5px;
   }
 }
+
 .mod {
   padding: 10px 0;
 }
+
 .mod-title {
   font-size: 20px;
   padding: 10px 0;
   border-bottom: 1px solid rgba(204, 204, 204, 0.3);
   margin-bottom: 10px;
 }
+
 .mod-desc {
   padding: 5px 0;
   margin-bottom: 10px;
   font-size: 14px;
   line-height: 22px;
   color: #555;
-  > p {
+
+  >p {
     margin-bottom: 5px;
   }
 }
+
 .api {
   padding: 5px 15px 15px;
 }
+
 .api-name {
   font-size: 17px;
   font-weight: 600;
   padding: 10px 0;
   color: #4fc08d;
 }
+
 .api-desc {
   padding: 5px 0;
   margin-bottom: 10px;
@@ -251,7 +274,8 @@
   color: #555;
   border-left: 5px solid #eee;
   padding-left: 15px;
-  > p {
+
+  >p {
     margin-bottom: 5px;
   }
 }
@@ -267,11 +291,13 @@
   margin-right: 10px;
   vertical-align: 5%;
 }
+
 .api-method,
 .api-url {
   margin-bottom: 15px;
   font-size: 14px;
 }
+
 .api-params {
   margin-bottom: 15px;
   position: relative;
@@ -280,6 +306,7 @@
   overflow: hidden;
   overflow-x: auto;
 }
+
 .table {
   margin-top: 10px;
   width: 100%;
@@ -288,6 +315,7 @@
   font-size: 14px;
   line-height: 1.5;
   border-collapse: collapse;
+
   th {
     padding: 8px 10px;
     font-weight: 600;
@@ -296,6 +324,7 @@
     border-bottom: 1px solid #eee;
     background-color: #fafafa;
   }
+
   td {
     padding: 8px;
     border-bottom: 1px solid #f1f4f8;
@@ -309,22 +338,27 @@
   right: 10px;
   display: none;
 }
+
 @media screen and (max-width: 680px) {
   .menu-bar {
     display: block;
   }
+
   .side {
     display: none;
     box-shadow: 6px 0 5px #eee;
+
     &.show {
       display: block;
       left: 0;
     }
   }
+
   .main {
     margin-left: 0;
     padding: 15px 0 30px;
   }
+
   .card {
     border-radius: 0;
   }

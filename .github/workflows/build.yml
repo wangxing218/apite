@@ -10,23 +10,25 @@ on:
   release:
     types: [published]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     name: 构建发布
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: 18
           registry-url: https://registry.npmjs.org/
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
       - run: |
           echo "发布说明: ${{ github.event.inputs.mark }}"
       - run: |
           cd web-src
-          npm install
+          pnpm install
           npm run build
           cd ..
           npm publish

@@ -22,7 +22,8 @@
             <option value="Token" />
           </datalist>
           <span class="del" title="删除" @click="handleDel(index)">+</span>
-          <input v-if="/^content-type$/i.test(item.name)" list="ctype_list" type="text" v-model="item.value" class="input" placeholder="value" />
+          <input v-if="/^content-type$/i.test(item.name)" list="ctype_list" type="text" v-model="item.value"
+            class="input" placeholder="value" />
           <input v-else type="text" v-model="item.value" class="input" placeholder="value" />
           <!-- ctype_list -->
           <datalist id="ctype_list">
@@ -75,8 +76,9 @@
 </template>
 
 <style lang="scss" scoped>
-@import '../../asset/_var';
+@use '../../asset/_var' as *;
 $min-height: 240px;
+
 .req {
   border: 2px dashed #eee;
   margin: 15px auto 10px;
@@ -84,6 +86,7 @@ $min-height: 240px;
   justify-content: space-between;
   align-items: stretch;
 }
+
 .post {
   width: 50%;
   background-color: #fafafa;
@@ -92,6 +95,7 @@ $min-height: 240px;
   flex-direction: column;
   min-height: 300px;
 }
+
 .resp {
   flex: 1;
   width: 1%;
@@ -99,32 +103,39 @@ $min-height: 240px;
   flex-direction: column;
   background-color: #fff;
 }
+
 @media screen and (max-width: 980px) {
   .req {
     flex-direction: column;
   }
+
   .post {
     width: 100%;
     border-right: none;
     border-bottom: 1px solid #eee;
     min-height: 220px;
   }
+
   .resp {
     width: 100%;
     min-height: 200px;
   }
-  .text-area > textarea {
+
+  .text-area>textarea {
     min-height: 140px;
   }
+
   .resp-data {
-    .text-area > textarea {
+    .text-area>textarea {
       min-height: 190px;
     }
   }
 }
+
 .tab {
   display: flex;
-  > li {
+
+  >li {
     flex: 1;
     text-align: center;
     font-size: 12px;
@@ -132,26 +143,31 @@ $min-height: 240px;
     line-height: 32px;
     border-bottom: 1px solid #eee;
     cursor: pointer;
+
     &:hover {
       color: #0080ff;
     }
+
     &.on {
       color: #0080ff;
       border-bottom-color: #0080ff;
     }
   }
 }
+
 .action {
   padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .action-right {
   text-align: right;
   flex: 1;
   width: 1%;
 }
+
 .form {
   position: relative;
   padding: 10px;
@@ -160,42 +176,52 @@ $min-height: 240px;
   overflow-y: auto;
   flex: 1;
   height: 1%;
-  > li {
+
+  >li {
     margin-bottom: 5px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+
     .del {
       user-select: none;
       color: #ccc;
       font-size: 18px;
       font-weight: lighter;
+
       &:hover {
         color: #0080ff;
       }
+
       display: inline-block;
       text-align: center;
       padding: 5px;
       transform: rotateZ(45deg);
       cursor: pointer;
     }
-    > .input + .input {
+
+    >.input+.input {
       margin-left: 10px;
     }
-    > .key {
+
+    >.key {
       width: 30%;
     }
-    > .hkey {
+
+    >.hkey {
       width: 60%;
     }
+
     .label {
       font-weight: bold;
       width: 50%;
     }
+
     .text {
       color: #999;
     }
   }
+
   .input {
     appearance: none;
     display: block;
@@ -207,25 +233,30 @@ $min-height: 240px;
     line-height: 18px;
     padding: 6px 10px;
     outline: none;
+
     &:focus {
       border-color: #999;
     }
   }
+
   &.resp-con {
-    > li {
+    >li {
       @include textHidden;
       font-size: 12px;
       display: block;
-      > b {
+
+      >b {
         font-size: 13px;
       }
     }
   }
 }
+
 .text-area {
   position: relative;
   flex: 1;
-  > textarea {
+
+  >textarea {
     appearance: none;
     background-color: #fff;
     position: relative;
@@ -243,32 +274,40 @@ $min-height: 240px;
     white-space: pre-wrap;
   }
 }
+
 .resp-data {
   flex: 1;
   position: relative;
-  > .text-area {
+
+  >.text-area {
     height: 100%;
   }
 }
+
 .resp-img {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
-  > img {
+
+  >img {
     max-height: 100%;
     max-width: 100%;
   }
 }
+
 .tiny-icon {
   font-family: 'ui-icon';
 }
+
 .ti-add:before {
   content: '\e623';
 }
+
 .ti-refresh:before {
   content: '\e61b';
 }
+
 .ti-header:before {
   content: '\e666';
 }

@@ -1,4 +1,4 @@
-@import "./var";
+@use './var' as *;
 
 @include setScrollStyle;
 
@@ -20,7 +20,7 @@ body,
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif, "microsoft-yahei";
+  font-family: Arial, Helvetica, sans-serif, 'microsoft-yahei';
   font-size: 16px;
   line-height: 1.4;
   color: #333;
@@ -64,10 +64,10 @@ img {
 .text-right {
   text-align: left !important;
 }
-.markdown-body li{
+.markdown-body li {
   list-style: initial;
 }
-.markdown-body ol li{
+.markdown-body ol li {
   list-style: decimal;
 }
 .tiny-btn {
@@ -85,7 +85,7 @@ img {
   margin-right: 90px;
   cursor: pointer;
   color: #999;
-  transition: all .2s;
+  transition: all 0.2s;
 
   &:hover {
     color: #4fc08d;
@@ -94,7 +94,7 @@ img {
 
   &::before,
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 49%;
     right: 101%;
@@ -130,7 +130,6 @@ img {
   }
 
   &.none {
-
     &::before,
     &::after {
       display: none;
