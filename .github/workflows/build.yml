@@ -39,5 +39,4 @@ jobs:
           pnpm install
           npm run build
           cd ..
-          ls -al
           npm publish
